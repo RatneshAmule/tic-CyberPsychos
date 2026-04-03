@@ -1,7 +1,7 @@
-🛡️ RECON-X
+🛡️ JURI-X
 Autonomous Digital Forensic Intelligence Platform
 
-RECON-X is a production-grade DFIR (Digital Forensics & Incident Response) platform built for real-world forensic analysis on Kali Linux. It performs actual forensic investigations using native CLI tools, not mock data.
+JURI-X is a production-grade DFIR (Digital Forensics & Incident Response) platform built for real-world forensic analysis on Kali Linux. It performs actual forensic investigations using native CLI tools, not mock data.
 
 🚀 Features
 🔍 Real Forensic Analysis (NO MOCK DATA)
@@ -33,7 +33,7 @@ strings, file, pdfinfo, etc.
 ❌ NO native Node.js modules (C++ addons)
 ⚙️ All analysis runs in external worker process
 🧰 Only CLI forensic tools used
-📁 File-based storage (/tmp/recon-x/)
+📁 File-based storage (/tmp/JURI-X/)
 🔐 Forensic integrity via SHA-256 hashing
 🧠 Architecture Flow
 Client (Next.js UI)
@@ -89,13 +89,13 @@ src/
 scripts/
  └── analyze-worker.mjs
 
-/tmp/recon-x/
+/tmp/JURI-X/
  ├── evidence/
  └── ai-settings.json
 ⚙️ Installation
 1️⃣ Clone Repository
-git clone https://github.com/your-username/recon-x.git
-cd recon-x
+git clone https://github.com/your-username/JURI-X.git
+cd JURI-X
 2️⃣ Install Dependencies
 npm install
 3️⃣ Install Forensic Tools (Kali Linux)
@@ -114,7 +114,7 @@ npm start
 
 All uploaded evidence is stored in:
 
-/tmp/recon-x/evidence/<case-id>/
+/tmp/JURI-X/evidence/<case-id>/
 🔐 Forensic Integrity
 SHA-256 hash generated for every file
 Read-only processing
@@ -171,6 +171,6 @@ Developed for real-world DFIR, CTFs, and forensic investigations.
 
 ⚡ Final Note
 
-RECON-X is not a demo tool.
+JURI-X is not a demo tool.
 
 It is designed to behave like a real forensic lab system, leveraging actual Kali Linux tooling for authentic investigation workflows.
