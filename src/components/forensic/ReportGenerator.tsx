@@ -26,7 +26,7 @@ import {
   Loader2,
 } from 'lucide-react';
 import { format } from 'date-fns';
-import type { AnalysisResult, Evidence, SuspiciousFinding, TimelineEvent } from '@/lib/forensic/types';
+import type { AnalysisResult, Evidence, SuspiciousFinding, TimelineEvent, IOCItem } from '@/lib/forensic/types';
 
 function safeFormat(timestamp: string | undefined | null, fmt: string): string {
   if (!timestamp) return '--:--';
@@ -65,6 +65,7 @@ export default function ReportGenerator({ data }: ReportGeneratorProps) {
   const timeline = data?.timeline || [];
   const suspiciousFindings = data?.suspiciousFindings || [];
   const rewindSequence = data?.rewindSequence || [];
+  const iocs = data?.iocs || [];
   const custody = data?.custody || [];
   const stats = data?.stats || { totalEvents: 0, suspiciousCount: 0, criticalCount: 0, timeRange: { start: '', end: '' }, topCategories: [] };
 
@@ -89,6 +90,16 @@ export default function ReportGenerator({ data }: ReportGeneratorProps) {
     URL.revokeObjectURL(url);
   };
 
+  const downloadPDF = () => {
+    const reportHTML = generateHTMLReport(data);
+    const printWindow = window.open('', '_blank');
+    if (printWindow) {
+      printWindow.document.write(reportHTML);
+      printWindow.document.close();
+      setTimeout(() => printWindow.print(), 500);
+    }
+  };
+
   return (
     <div className="space-y-4">
       {/* Actions */}
@@ -111,6 +122,15 @@ export default function ReportGenerator({ data }: ReportGeneratorProps) {
               >
                 <Download className="h-3.5 w-3.5 mr-1" />
                 Download Report
+              </Button>
+              <Button
+                variant="outline"
+                size="sm"
+                className="border-border/50"
+                onClick={downloadPDF}
+              >
+                <Printer className="h-3.5 w-3.5 mr-1" />
+                Print PDF
               </Button>
               <Button
                 variant="outline"
@@ -299,11 +319,76 @@ export default function ReportGenerator({ data }: ReportGeneratorProps) {
               </CardContent>
             </Card>
 
+            {/* IOCs */}
+            {iocs.length > 0 && (
+              <Card className="forensic-card">
+                <CardHeader className="pb-2">
+                  <CardTitle className="text-sm font-bold text-foreground uppercase tracking-wider">
+                    5. Indicators of Compromise
+                  </CardTitle>
+                </CardHeader>
+                <CardContent className="p-4 pt-0">
+                  <div className="rounded-lg border border-border/50 overflow-hidden">
+                    <Table>
+                      <TableHeader>
+                        <TableRow className="bg-muted/30 hover:bg-muted/30">
+                          <TableHead className="text-[10px] uppercase tracking-wider">Type</TableHead>
+                          <TableHead className="text-[10px] uppercase tracking-wider">Value</TableHead>
+                          <TableHead className="text-[10px] uppercase tracking-wider">Source</TableHead>
+                          <TableHead className="text-[10px] uppercase tracking-wider">Severity</TableHead>
+                        </TableRow>
+                      </TableHeader>
+                      <TableBody>
+                        {iocs.slice(0, 10).map((ioc: IOCItem, idx: number) => (
+                          <TableRow key={`${ioc.type}-${ioc.value}-${idx}`} className="border-border/30">
+                            <TableCell className="text-xs py-2">
+                              <Badge variant="secondary" className="text-[10px] uppercase">
+                                {ioc.type}
+                              </Badge>
+                            </TableCell>
+                            <TableCell className="text-xs font-mono text-cyan py-2 max-w-[240px] truncate">
+                              {ioc.value}
+                            </TableCell>
+                            <TableCell className="text-xs text-muted-foreground py-2 max-w-[160px] truncate">
+                              {ioc.source}
+                            </TableCell>
+                            <TableCell className="text-xs py-2">
+                              <Badge
+                                variant="outline"
+                                className="text-[10px]"
+                                style={{
+                                  borderColor: ioc.severity === 'critical' ? '#ef4444'
+                                    : ioc.severity === 'high' ? '#f97316'
+                                    : ioc.severity === 'medium' ? '#f59e0b'
+                                    : '#22c55e',
+                                  color: ioc.severity === 'critical' ? '#ef4444'
+                                    : ioc.severity === 'high' ? '#f97316'
+                                    : ioc.severity === 'medium' ? '#f59e0b'
+                                    : '#22c55e',
+                                }}
+                              >
+                                {ioc.severity.toUpperCase()}
+                              </Badge>
+                            </TableCell>
+                          </TableRow>
+                        ))}
+                      </TableBody>
+                    </Table>
+                  </div>
+                  {iocs.length > 10 && (
+                    <p className="text-[10px] text-muted-foreground mt-2">
+                      Showing 10 of {iocs.length} IOCs. Export full list from IOC Dashboard.
+                    </p>
+                  )}
+                </CardContent>
+              </Card>
+            )}
+
             {/* Rewind Sequence */}
             <Card className="forensic-card">
               <CardHeader className="pb-2">
                 <CardTitle className="text-sm font-bold text-foreground uppercase tracking-wider">
-                  5. Forensic Rewind Sequence
+                  6. Forensic Rewind Sequence
                 </CardTitle>
               </CardHeader>
               <CardContent className="p-4 pt-0">
@@ -326,7 +411,7 @@ export default function ReportGenerator({ data }: ReportGeneratorProps) {
             <Card className="forensic-card">
               <CardHeader className="pb-2">
                 <CardTitle className="text-sm font-bold text-foreground uppercase tracking-wider">
-                  6. Chain of Custody
+                  7. Chain of Custody
                 </CardTitle>
               </CardHeader>
               <CardContent className="p-4 pt-0">
@@ -369,6 +454,164 @@ export default function ReportGenerator({ data }: ReportGeneratorProps) {
       )}
     </div>
   );
+}
+
+function generateHTMLReport(data: AnalysisResult): string {
+  const caseInfo = data.caseInfo;
+  const evidence = data.evidence || [];
+  const stats = data.stats || { totalEvents: 0, suspiciousCount: 0, criticalCount: 0, timeRange: { start: '', end: '' } };
+  const findings = data.suspiciousFindings || [];
+  const rewind = data.rewindSequence || [];
+  const custody = data.custody || [];
+  const iocs = data.iocs || [];
+
+  function esc(s: string): string {
+    return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+  }
+
+  const evidenceRows = evidence.map((ev, i) => `
+    <tr>
+      <td>${i + 1}</td>
+      <td>${esc(ev.name)}</td>
+      <td>${esc(ev.type.replace(/_/g, ' '))}</td>
+      <td>${(ev.size / 1024 / 1024 / 1024).toFixed(2)} GB</td>
+      <td>${esc(ev.status)}</td>
+      <td><code>${esc(ev.hash)}</code></td>
+    </tr>`).join('');
+
+  const findingRows = findings.map((f, i) => `
+    <tr style="border-left: 3px solid ${SEVERITY_COLORS[f.severity] || '#64748b'}">
+      <td>${i + 1}</td>
+      <td><strong>${esc(f.severity.replace(/_/g, ' ').toUpperCase())}</strong></td>
+      <td>${esc(f.title)}</td>
+      <td>${esc(f.category)}</td>
+      <td>${(f.confidence * 100).toFixed(0)}%</td>
+      <td>${esc(f.description)}</td>
+      <td>${esc(f.recommendation)}</td>
+    </tr>`).join('');
+
+  const rewindRows = rewind.map((e, i) => `
+    <tr>
+      <td>${String(i + 1).padStart(2, '0')}</td>
+      <td>${esc(e.timestamp)}</td>
+      <td>${esc(e.action.replace(/_/g, ' '))}</td>
+      <td>${esc(e.entity)}</td>
+      <td>${esc(e.description)}</td>
+    </tr>`).join('');
+
+  const custodyRows = custody.map((c) => `
+    <tr>
+      <td>${esc(c.action)}</td>
+      <td>${esc(c.details)}</td>
+      <td>${esc(c.performedBy)}</td>
+      <td>${esc(c.timestamp)}</td>
+    </tr>`).join('');
+
+  const iocRows = iocs.map((ioc, i) => `
+    <tr>
+      <td>${i + 1}</td>
+      <td>${esc((ioc.type || 'unknown').toUpperCase())}</td>
+      <td><code>${esc(ioc.value)}</code></td>
+      <td>${esc(ioc.source)}</td>
+      <td>${esc(ioc.context || '')}</td>
+      <td><strong>${esc((ioc.severity || 'medium').toUpperCase())}</strong></td>
+    </tr>`).join('');
+
+  return `<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>JURI-X Forensic Report - ${esc(caseInfo.id)}</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; color: #111; background: #fff; padding: 40px; line-height: 1.5; font-size: 13px; }
+    .header { text-align: center; border-bottom: 3px solid #1a1a2e; padding-bottom: 20px; margin-bottom: 30px; }
+    .header h1 { font-size: 22px; letter-spacing: 3px; color: #1a1a2e; margin-bottom: 4px; }
+    .header .subtitle { font-size: 11px; color: #666; }
+    .header .meta { font-size: 10px; color: #888; margin-top: 8px; font-family: monospace; }
+    .classification { display: inline-block; background: #dc2626; color: white; padding: 2px 10px; border-radius: 3px; font-size: 10px; font-weight: bold; letter-spacing: 1px; margin-top: 8px; }
+    h2 { font-size: 15px; color: #1a1a2e; border-bottom: 1px solid #ddd; padding-bottom: 6px; margin: 28px 0 14px 0; letter-spacing: 1px; }
+    .info-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 6px 20px; margin-bottom: 10px; }
+    .info-grid .label { color: #666; font-size: 12px; }
+    .info-grid .value { font-weight: 500; font-size: 12px; }
+    table { width: 100%; border-collapse: collapse; margin: 10px 0 20px 0; font-size: 12px; }
+    th { background: #f3f4f6; text-align: left; padding: 8px 10px; font-size: 10px; text-transform: uppercase; letter-spacing: 0.5px; color: #555; border-bottom: 2px solid #ddd; }
+    td { padding: 6px 10px; border-bottom: 1px solid #eee; vertical-align: top; }
+    tr:hover { background: #f9fafb; }
+    code { background: #f3f4f6; padding: 1px 5px; border-radius: 3px; font-size: 11px; }
+    .stats-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin: 14px 0; }
+    .stat-box { text-align: center; padding: 14px; border: 1px solid #ddd; border-radius: 6px; }
+    .stat-box .number { font-size: 24px; font-weight: bold; font-family: monospace; }
+    .stat-box .label { font-size: 10px; color: #666; text-transform: uppercase; }
+    .footer { margin-top: 40px; border-top: 1px solid #ddd; padding-top: 16px; text-align: center; font-size: 10px; color: #888; }
+    @media print { body { padding: 20px; } .no-print { display: none; } }
+  </style>
+</head>
+<body>
+  <div class="header">
+    <h1>&#x1F6E1; JURI-X FORENSIC REPORT</h1>
+    <div class="subtitle">Autonomous Forensic Intelligence Platform</div>
+    <div class="meta">Generated: ${new Date().toISOString()} | Case: ${esc(caseInfo.id)}</div>
+    <div class="classification">CONFIDENTIAL</div>
+  </div>
+
+  <h2>1. CASE INFORMATION</h2>
+  <div class="info-grid">
+    <div><span class="label">Case ID:</span> <span class="value">${esc(caseInfo.id)}</span></div>
+    <div><span class="label">Status:</span> <span class="value">${esc(caseInfo.status.toUpperCase())}</span></div>
+    <div><span class="label">Case Name:</span> <span class="value">${esc(caseInfo.name)}</span></div>
+    <div><span class="label">Analyst:</span> <span class="value">${esc(caseInfo.analyst)}</span></div>
+    <div style="grid-column: span 2"><span class="label">Description:</span> <span class="value">${esc(caseInfo.description)}</span></div>
+  </div>
+
+  <h2>2. EVIDENCE SUMMARY</h2>
+  <table>
+    <thead><tr><th>#</th><th>Name</th><th>Type</th><th>Size</th><th>Status</th><th>Hash</th></tr></thead>
+    <tbody>${evidenceRows}</tbody>
+  </table>
+
+  <h2>3. ANALYSIS STATISTICS</h2>
+  <div class="stats-row">
+    <div class="stat-box"><div class="number">${stats.totalEvents}</div><div class="label">Total Events</div></div>
+    <div class="stat-box"><div class="number" style="color:#ef4444">${stats.criticalCount}</div><div class="label">Critical</div></div>
+    <div class="stat-box"><div class="number" style="color:#f59e0b">${stats.suspiciousCount}</div><div class="label">Suspicious</div></div>
+    <div class="stat-box"><div class="number">${evidence.length}</div><div class="label">Evidence Items</div></div>
+  </div>
+  <p style="font-size:12px;color:#666;">Time Range: ${esc(stats.timeRange?.start || 'N/A')} &rarr; ${esc(stats.timeRange?.end || 'N/A')}</p>
+
+  <h2>4. KEY FINDINGS</h2>
+  <table>
+    <thead><tr><th>#</th><th>Severity</th><th>Title</th><th>Category</th><th>Confidence</th><th>Description</th><th>Recommendation</th></tr></thead>
+    <tbody>${findingRows}</tbody>
+  </table>
+
+  ${iocs.length > 0 ? `
+  <h2>5. INDICATORS OF COMPROMISE</h2>
+  <table>
+    <thead><tr><th>#</th><th>Type</th><th>Value</th><th>Source</th><th>Context</th><th>Severity</th></tr></thead>
+    <tbody>${iocRows}</tbody>
+  </table>
+  ` : ''}
+
+  <h2>${iocs.length > 0 ? '6' : '5'}. FORENSIC REWIND SEQUENCE</h2>
+  <table>
+    <thead><tr><th>#</th><th>Timestamp</th><th>Action</th><th>Entity</th><th>Description</th></tr></thead>
+    <tbody>${rewindRows}</tbody>
+  </table>
+
+  <h2>${iocs.length > 0 ? '7' : '6'}. CHAIN OF CUSTODY</h2>
+  <table>
+    <thead><tr><th>Action</th><th>Details</th><th>Performed By</th><th>Timestamp</th></tr></thead>
+    <tbody>${custodyRows}</tbody>
+  </table>
+
+  <div class="footer">
+    <p>This report was generated by JURI-X Autonomous Forensic Intelligence Platform.</p>
+    <p style="margin-top:4px;">All findings are based on automated analysis and should be verified by a qualified forensic examiner.</p>
+    <p style="margin-top:6px;font-family:monospace;">Report ID: ${esc(caseInfo.id)}-${Date.now()} | Classification: CONFIDENTIAL</p>
+  </div>
+</body>
+</html>`;
 }
 
 function generateTextReport(data: AnalysisResult): string {

@@ -1012,6 +1012,154 @@ function analyzeWithBinwalk(filePath) {
 }
 
 // ═══════════════════════════════════════════════════════════════════════════════
+// IOC EXTRACTION — Extract Indicators of Compromise from all evidence
+// ═══════════════════════════════════════════════════════════════════════════════
+
+function extractIOCsFromText(text, source) {
+  const iocs = [];
+  const seen = new Set();
+  
+  function addIOC(type, value, context, severity, tags = []) {
+    const key = `${type}:${value}`;
+    if (seen.has(key)) return;
+    seen.add(key);
+    iocs.push({ type, value, source, context: context.substring(0, 200), severity, firstSeen: new Date().toISOString(), tags });
+  }
+
+  // IP addresses (v4)
+  const ipRegex = /\b((?:25[0-5]|2[0-4]\d|[01]?\d\d?)\.(?:25[0-5]|2[0-4]\d|[01]?\d\d?)\.(?:25[0-5]|2[0-4]\d|[01]?\d\d?)\.(?:25[0-5]|2[0-4]\d|[01]?\d\d?))\b/g;
+  let match;
+  while ((match = ipRegex.exec(text)) !== null) {
+    const ip = match[1];
+    if (ip === '0.0.0.0' || ip === '127.0.0.1' || ip === '255.255.255.255') continue;
+    const start = Math.max(0, match.index - 50);
+    const end = Math.min(text.length, match.index + ip.length + 50);
+    const ctx = text.substring(start, end).replace(/\s+/g, ' ').trim();
+    const sev = /^(10\.|192\.168\.|172\.(1[6-9]|2\d|3[01])\.)/.test(ip) ? 'low' : 
+                /\.(onion|tor|darknet)\b/i.test(ctx) ? 'critical' : 'medium';
+    addIOC('ip', ip, ctx, sev);
+  }
+
+  // URLs
+  const urlRegex = /\b(https?:\/\/[^\s"'<>\]\)]+)/gi;
+  while ((match = urlRegex.exec(text)) !== null) {
+    const url = match[1];
+    const start = Math.max(0, match.index - 30);
+    const ctx = text.substring(start, Math.min(text.length, match.index + url.length + 30)).replace(/\s+/g, ' ').trim();
+    const sev = /\.onion/i.test(url) ? 'critical' : 
+                /darknet|malware|exploit|hack|phishing/i.test(url) ? 'high' : 'medium';
+    const tags = [];
+    if (/\.onion/i.test(url)) tags.push('tor');
+    if (/\.exe|\.dll|\.ps1|\.bat|\.scr/i.test(url)) tags.push('executable-download');
+    if (/password|credential|leak|dump/i.test(url)) tags.push('credential-leak');
+    addIOC('url', url, ctx, sev, tags);
+  }
+
+  // Domains
+  const domainRegex = /\b((?:[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?\.)+(?:onion|com|net|org|io|ru|cn|de|uk|fr|br|in|info|biz|xyz|top|tk|ml|ga|cf|gq))\b/g;
+  while ((match = domainRegex.exec(text)) !== null) {
+    const domain = match[1].toLowerCase();
+    if (seen.has(`domain:${domain}`)) continue;
+    const start = Math.max(0, match.index - 40);
+    const ctx = text.substring(start, Math.min(text.length, match.index + domain.length + 40)).replace(/\s+/g, ' ').trim();
+    const sev = domain.endsWith('.onion') ? 'critical' : 
+                /malware|exploit|phishing|darknet/i.test(ctx) ? 'high' : 'low';
+    addIOC('domain', domain, ctx, sev);
+  }
+
+  // Email addresses
+  const emailRegex = /\b([a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,})\b/g;
+  while ((match = emailRegex.exec(text)) !== null) {
+    const email = match[1].toLowerCase();
+    const start = Math.max(0, match.index - 30);
+    const ctx = text.substring(start, Math.min(text.length, match.index + email.length + 30)).replace(/\s+/g, ' ').trim();
+    const sev = /admin|root|hack|malware|spam/i.test(email) ? 'high' : 'medium';
+    addIOC('email', email, ctx, sev);
+  }
+
+  // Bitcoin/crypto wallets
+  const btcRegex = /\b([13][a-km-zA-HJ-NP-Z1-9]{25,34})\b/g;
+  while ((match = btcRegex.exec(text)) !== null) {
+    const wallet = match[1];
+    const start = Math.max(0, match.index - 30);
+    const ctx = text.substring(start, Math.min(text.length, match.index + wallet.length + 30)).replace(/\s+/g, ' ').trim();
+    addIOC('bitcoin', wallet, ctx, 'high', ['cryptocurrency']);
+  }
+  const xmrRegex = /\b(4[0-9AB][1-9A-HJ-NP-Za-km-z]{93})\b/g;
+  while ((match = xmrRegex.exec(text)) !== null) {
+    addIOC('bitcoin', match[1].substring(0, 20) + '...', text.substring(Math.max(0, match.index - 30), match.index + 50).replace(/\s+/g, ' ').trim(), 'high', ['monero']);
+  }
+
+  // MAC addresses
+  const macRegex = /\b([0-9A-Fa-f]{2}[:-]){5}([0-9A-Fa-f]{2})\b/g;
+  while ((match = macRegex.exec(text)) !== null) {
+    const mac = match[0];
+    if (seen.has(`mac:${mac}`)) continue;
+    const start = Math.max(0, match.index - 30);
+    const ctx = text.substring(start, Math.min(text.length, match.index + mac.length + 30)).replace(/\s+/g, ' ').trim();
+    addIOC('mac', mac, ctx, 'low');
+  }
+
+  // CVE references
+  const cveRegex = /\b(CVE-\d{4}-\d{4,})\b/g;
+  while ((match = cveRegex.exec(text)) !== null) {
+    const start = Math.max(0, match.index - 50);
+    const ctx = text.substring(start, Math.min(text.length, match.index + match[0].length + 50)).replace(/\s+/g, ' ').trim();
+    addIOC('cve', match[1], ctx, 'high', ['vulnerability']);
+  }
+
+  // File hashes (SHA-256, MD5 patterns)
+  const hashRegex = /\b([a-fA-F0-9]{64})\b/g;
+  while ((match = hashRegex.exec(text)) !== null) {
+    const hash = match[1];
+    if (seen.has(`hash:${hash}`)) continue;
+    const start = Math.max(0, match.index - 30);
+    const ctx = text.substring(start, Math.min(text.length, match.index + hash.length + 30)).replace(/\s+/g, ' ').trim();
+    addIOC('hash', hash, ctx, 'medium', ['sha256']);
+  }
+
+  return iocs;
+}
+
+function extractIOCsFromAllEvidence(fileAnalyses, stringsResults, textContents) {
+  const allIOCs = [];
+  
+  for (let i = 0; i < fileAnalyses.length; i++) {
+    const fa = fileAnalyses[i];
+    const source = fa.fileName || `file-${i}`;
+    
+    // Extract from strings
+    if (stringsResults[i] && stringsResults[i].length > 0) {
+      const text = stringsResults[i].join('\n');
+      const iocs = extractIOCsFromText(text, source);
+      allIOCs.push(...iocs);
+    }
+
+    // Extract from text content
+    if (textContents[i]) {
+      const iocs = extractIOCsFromText(textContents[i], source);
+      allIOCs.push(...iocs);
+    }
+  }
+
+  // Deduplicate by value (keep highest severity)
+  const deduped = new Map();
+  for (const ioc of allIOCs) {
+    const existing = deduped.get(`${ioc.type}:${ioc.value}`);
+    if (!existing) {
+      deduped.set(`${ioc.type}:${ioc.value}`, ioc);
+    } else {
+      const sevOrder = { critical: 4, high: 3, medium: 2, low: 1 };
+      if ((sevOrder[ioc.severity] || 0) > (sevOrder[existing.severity] || 0)) {
+        deduped.set(`${ioc.type}:${ioc.value}`, { ...ioc, sources: [...(existing.sources || [existing.source]), ioc.source] });
+      }
+    }
+  }
+
+  return Array.from(deduped.values());
+}
+
+// ═══════════════════════════════════════════════════════════════════════════════
 // MAIN ANALYSIS PIPELINE
 // ═══════════════════════════════════════════════════════════════════════════════
 
@@ -1027,7 +1175,7 @@ async function main() {
     process.exit(1);
   }
 
-  console.log(`[WORKER] Starting analysis for: ${caseDir}`);
+  console.error(`[WORKER] Starting analysis for: ${caseDir}`);
   const startTime = Date.now();
 
   const fileNames = readdirSync(caseDir);
@@ -1061,7 +1209,7 @@ async function main() {
 
     try {
       const fileStat = statSync(filePath);
-      console.log(`[WORKER] Processing: ${fileName} (${formatSize(fileStat.size)})`);
+      console.error(`[WORKER] Processing: ${fileName} (${formatSize(fileStat.size)})`);
 
       // 1. Hash
       let hash = 'error';
@@ -1106,9 +1254,9 @@ async function main() {
       // 4. Strings
       let extractedStrings = [];
       if (isBinary || fileStat.size > 100_000) {
-        console.log(`[WORKER]   Extracting strings...`);
+        console.error(`[WORKER]   Extracting strings...`);
         extractedStrings = extractStrings(filePath);
-        console.log(`[WORKER]   Strings: ${extractedStrings.length}`);
+        console.error(`[WORKER]   Strings: ${extractedStrings.length}`);
       } else if (isText) {
         extractedStrings = fileContent.split('\n').filter(l => l.trim().length >= 4);
       }
@@ -1125,7 +1273,7 @@ async function main() {
       let logEvents = [];
       if (isText && !isDiskImage && (ext === '.log' || ext === '.txt' || fileName.toLowerCase().includes('log') || fileName.toLowerCase().includes('event'))) {
         logEvents = parseLogFile(fileContent, fileName);
-        console.log(`[WORKER]   Log events: ${logEvents.length}`);
+        console.error(`[WORKER]   Log events: ${logEvents.length}`);
       }
 
       // 7. Image analysis (exiftool CLI)
@@ -1133,7 +1281,7 @@ async function main() {
       if (isImage) {
         try {
           imageAnalysis = await analyzeImage(filePath);
-          if (imageAnalysis) console.log(`[WORKER]   Image: ${imageAnalysis.width}x${imageAnalysis.height}, GPS: ${imageAnalysis.hasGPS}`);
+          if (imageAnalysis) console.error(`[WORKER]   Image: ${imageAnalysis.width}x${imageAnalysis.height}, GPS: ${imageAnalysis.hasGPS}`);
         } catch (e) { console.warn(`[WORKER]   Image analysis: ${e.message}`); }
       }
 
@@ -1142,14 +1290,14 @@ async function main() {
       if (isSQLite) {
         try {
           sqliteAnalysis = await parseSqliteDatabase(filePath);
-          console.log(`[WORKER]   SQLite: type=${sqliteAnalysis.databaseType}, tables=${sqliteAnalysis.tables.length}`);
+          console.error(`[WORKER]   SQLite: type=${sqliteAnalysis.databaseType}, tables=${sqliteAnalysis.tables.length}`);
         } catch (e) { console.warn(`[WORKER]   SQLite: ${e.message}`); }
       }
 
       // === DISK IMAGE ANALYSIS ===
       let diskImageInfo = fileAnalysis.diskImageInfo || null;
       if (isDiskImage) {
-        console.log(`[WORKER]   === DISK IMAGE ===`);
+        console.error(`[WORKER]   === DISK IMAGE ===`);
         try {
           const skResult = analyzeWithSleuthKit(filePath);
           if (skResult.partitions?.length) {
@@ -1177,7 +1325,7 @@ async function main() {
       const isMemDump = ['.dmp', '.vmem', '.liemem'].some(e => ext === e) && !isDiskImage && fileStat.size > 10 * 1024 * 1024;
       if (isMemDump) {
         try {
-          console.log(`[WORKER]   === MEMORY ===`);
+          console.error(`[WORKER]   === MEMORY ===`);
           const memResult = analyzeMemoryDump(filePath);
           if (memResult.osInfo) allTimelineEvents.push({ id: `evt-mem-${++eventId}`, timestamp: new Date().toISOString(), action: 'file_opened', entity: memResult.osInfo.osName || 'Unknown', description: `OS: ${memResult.osInfo.osName}`, source: `Volatility3: ${fileName}`, confidence: 0.95, severity: 'benign', metadata: memResult.osInfo, relatedEvents: [] });
           if (memResult.processes?.length) {
@@ -1199,7 +1347,7 @@ async function main() {
       const isPCAP = ['.pcap', '.pcapng', '.cap'].some(e => ext === e) || fileAnalysis.magicType === 'network_capture';
       if (isPCAP) {
         try {
-          console.log(`[WORKER]   === PCAP ===`);
+          console.error(`[WORKER]   === PCAP ===`);
           const pcapResult = analyzePCAP(filePath);
           for (const dns of (pcapResult.dnsQueries || []).slice(0, 100)) {
             allNodes.push({ id: `dns-${dns.domain}-${fileName}`, type: 'domain', label: dns.domain, properties: { ip: dns.resolvedIp } });
@@ -1216,7 +1364,7 @@ async function main() {
       const isArchive = ['.zip', '.7z', '.tar', '.gz', '.rar'].some(e => ext === e) || fileAnalysis.magicType === 'archive';
       if (isArchive && !isImage) {
         try {
-          console.log(`[WORKER]   === ARCHIVE ===`);
+          console.error(`[WORKER]   === ARCHIVE ===`);
           const extractDir = `/tmp/recon-x/extracted/${basename(caseDir)}/${fileName}`;
           const archResult = extractAndAnalyzeArchive(filePath, extractDir);
           for (const ef of (archResult.extractedFiles || []).slice(0, 200)) {
@@ -1230,7 +1378,7 @@ async function main() {
       const isRegistry = ['.reg', '.hive'].some(e => ext === e) || fileAnalysis.magicType === 'registry_hive' || /ntuser\.dat|sam$|system$|software$|security$/i.test(basename(filePath));
       if (isRegistry) {
         try {
-          console.log(`[WORKER]   === REGISTRY ===`);
+          console.error(`[WORKER]   === REGISTRY ===`);
           const regResult = analyzeRegistryHive(filePath);
           if (regResult.runKeys?.length) allFindings.push({ id: `find-reg-run-${++findingId}`, severity: 'highly_suspicious', category: 'Registry', title: `${regResult.runKeys.length} Run keys`, description: regResult.runKeys.map(r => `${r.key}: ${r.value}`).join('\n'), evidence: fileName, timestamp: new Date().toISOString(), relatedArtifacts: [fileName], confidence: 0.9 });
           for (const usb of (regResult.usbDevices || [])) allTimelineEvents.push({ id: `evt-usb-${++eventId}`, timestamp: usb.lastWriteTime || new Date().toISOString(), action: 'usb_connected', entity: usb.deviceName || 'USB', description: `USB: ${usb.deviceName}`, source: `Registry: ${fileName}`, confidence: 0.85, severity: 'benign', relatedEvents: [] });
@@ -1241,7 +1389,7 @@ async function main() {
       // === PDF ===
       if (ext === '.pdf') {
         try {
-          console.log(`[WORKER]   === PDF ===`);
+          console.error(`[WORKER]   === PDF ===`);
           const pdfResult = analyzePDF(filePath);
           if (pdfResult.hasJS) allFindings.push({ id: `find-pdf-js-${++findingId}`, severity: 'critical', category: 'PDF', title: 'JavaScript in PDF', description: 'Embedded JS — exploit risk.', evidence: fileName, timestamp: new Date().toISOString(), relatedArtifacts: [fileName], confidence: 0.9 });
           if (pdfResult.hasActions) allFindings.push({ id: `find-pdf-act-${++findingId}`, severity: 'highly_suspicious', category: 'PDF', title: 'Auto-actions in PDF', description: `${pdfResult.actions?.length || 0} launch/open actions.`, evidence: fileName, timestamp: new Date().toISOString(), relatedArtifacts: [fileName], confidence: 0.85 });
@@ -1381,6 +1529,23 @@ async function main() {
     heatmap.push({ hour: h, count: hourMap[h] });
   }
 
+  // Extract IOCs from all evidence
+  console.log('[WORKER] Extracting IOCs...');
+  const stringsForIOC = [];
+  const textForIOC = [];
+  for (const fa of processedFiles) {
+    try {
+      const str = extractStrings(fa.filePath, 6);
+      stringsForIOC.push(str);
+    } catch { stringsForIOC.push([]); }
+    try {
+      const txt = safeReadText(fa.filePath);
+      textForIOC.push(isTextFile(txt) ? txt : '');
+    } catch { textForIOC.push(''); }
+  }
+  const extractedIOCs = extractIOCsFromAllEvidence(processedFiles, stringsForIOC, textForIOC);
+  console.error(`[WORKER] Extracted ${extractedIOCs.length} IOCs`);
+
   // ─── Build final result ───
   const allTimestamps = allTimelineEvents.map(e => new Date(e.timestamp).getTime()).filter(t => !isNaN(t));
   const timeRange = allTimestamps.length > 0
@@ -1412,6 +1577,7 @@ async function main() {
     },
     heatmap,
     keywordResults: allKeywordResults,
+    iocs: extractedIOCs,
     geoIPResults: [],
     custody: allCustody,
     stats: {
@@ -1428,7 +1594,7 @@ async function main() {
   };
 
   const elapsed = ((Date.now() - startTime) / 1000).toFixed(1);
-  console.log(`[WORKER] Analysis complete in ${elapsed}s. Events: ${allTimelineEvents.length}, Findings: ${allFindings.length}`);
+  console.error(`[WORKER] Analysis complete in ${elapsed}s. Events: ${allTimelineEvents.length}, Findings: ${allFindings.length}`);
 
   // Output JSON to stdout
   console.log('---JSON-RESULT-START---');

@@ -1,0 +1,60 @@
+Windows Registry Editor Version 5.00
+
+; Suspicious Run keys
+[HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Run]
+"svchost_update"="C:\\Temp\\malware.exe"
+"WindowsUpdate"="powershell.exe -WindowStyle Hidden -enc JABjAGwAaQBlAG4AdAA..."
+"GoogleUpdate"="C:\\Users\\admin\\AppData\\Local\\Google\\Update\\googleupdate.exe /c"
+
+; Recently used files
+[HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Explorer\RecentDocs]
+"mrulist"=hex:...
+
+; Typed URLs
+[HKEY_CURRENT_USER\Software\Microsoft\Internet Explorer\TypedURLs]
+"url1"="https://phishing-login.com/"
+"url2"="http://malware-server.net/"
+"url3"="https://darknet-market.onion/products"
+"url4"="https://protonmail.com/inbox"
+
+; Network connections
+[HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Internet Settings]
+"ProxyServer"="socks5://127.0.0.1:9050"
+"ProxyEnable"=dword:00000001
+
+; SSH keys
+[HKEY_CURRENT_USER\Software\OpenSSH]
+"PrivateKey"=hex:a1,b2,c3...
+
+; Wireless networks
+[HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\NetworkList\Profiles]
+"Profile1"="HackerWiFi"
+"Profile2"="OfficeNetwork"
+
+; Persistence locations
+[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Run]
+"SecurityUpdate"="C:\\Windows\\System32\\svchost.exe -k netsvcs"
+"SystemService"="C:\\Temp\\service.exe"
+
+; Suspicious services
+[HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services]
+"BackdoorService"=dword:00000002
+"KeyName"="HKLM\\SYSTEM\\CurrentControlSet\\Services\\BackdoorService"
+"ImagePath"="C:\\Windows\\System32\\backdoor.sys"
+
+; USB devices
+[HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Enum\USBSTOR]
+"Disk&Ven_SanDisk&Prod_Ultra_Fit"="USBSTOR\\Disk&Ven_SanDisk&Prod_Ultra_Fit\\4C53000123456789&0"
+
+; User accounts
+[HKEY_LOCAL_MACHINE\SAM\Domains\Account\Users]
+"hacker"="Password: P@ssw0rd123!"
+"admin"="Password: Sup3rS3cr3t!"
+
+; Recent commands
+[HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Explorer\RunMRU]
+"a"="cmd.exe /c whoami"
+"b"="powershell -enc base64"
+"c"="net user hacker P@ssw0rd123! /add"
+"d"="reg add HKLM\\... /f"
+"MRUList"="dcba"

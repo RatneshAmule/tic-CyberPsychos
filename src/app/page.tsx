@@ -11,11 +11,12 @@ import {
   Play,
   Network,
   AlertTriangle,
-  Search,
   FileText,
   Loader2,
   CheckCircle,
   Bot,
+  Crosshair,
+  Fingerprint,
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import Dashboard, { DashboardSkeleton } from '@/components/forensic/Dashboard';
@@ -23,13 +24,14 @@ import TimelineView from '@/components/forensic/TimelineView';
 import RewindPlayer from '@/components/forensic/RewindPlayer';
 import EntityGraph from '@/components/forensic/EntityGraph';
 import SuspiciousPanel from '@/components/forensic/SuspiciousPanel';
-import KeywordSearch from '@/components/forensic/KeywordSearch';
 import ReportGenerator from '@/components/forensic/ReportGenerator';
 import EvidenceUpload from '@/components/forensic/EvidenceUpload';
 import AIInvestigator from '@/components/forensic/AIInvestigator';
+import IOCDashboard from '@/components/forensic/IOCDashboard';
+import HashLookup from '@/components/forensic/HashLookup';
 import type { AnalysisResult } from '@/lib/forensic/types';
 
-type TabId = 'dashboard' | 'evidence' | 'timeline' | 'rewind' | 'graph' | 'findings' | 'search' | 'ai' | 'reports';
+type TabId = 'dashboard' | 'evidence' | 'timeline' | 'rewind' | 'graph' | 'findings' | 'ai' | 'reports' | 'ioc' | 'hash';
 
 interface TabConfig {
   id: TabId;
@@ -42,10 +44,11 @@ const TABS: TabConfig[] = [
   { id: 'dashboard', label: 'Dashboard', icon: Home },
   { id: 'evidence', label: 'Evidence', icon: Upload, isSpecial: true },
   { id: 'timeline', label: 'Timeline', icon: Clock },
+  { id: 'ioc', label: 'IOC Intel', icon: Crosshair, isSpecial: true },
+  { id: 'hash', label: 'Hash Lookup', icon: Fingerprint, isSpecial: true },
   { id: 'rewind', label: 'Rewind Mode', icon: Play, isSpecial: true },
   { id: 'graph', label: 'Graph', icon: Network },
   { id: 'findings', label: 'Findings', icon: AlertTriangle },
-  { id: 'search', label: 'Search', icon: Search },
   { id: 'ai', label: 'AI Investigator', icon: Bot, isSpecial: true },
   { id: 'reports', label: 'Reports', icon: FileText },
 ];
@@ -146,7 +149,7 @@ export default function HomePage() {
                   <span>{tab.label}</span>
                   {tab.isSpecial && (
                     <span className="hidden sm:inline text-[9px] px-1 py-0 rounded bg-cyan/10 text-cyan font-mono">
-                      {tab.id === 'rewind' ? 'LIVE' : tab.id === 'ai' ? 'AI' : tab.id === 'evidence' ? 'NEW' : ''}
+                      {tab.id === 'rewind' ? 'LIVE' : tab.id === 'ai' ? 'AI' : tab.id === 'evidence' ? 'NEW' : tab.id === 'ioc' ? 'IOC' : tab.id === 'hash' ? 'VT' : ''}
                     </span>
                   )}
                   {isActive && (
@@ -213,8 +216,9 @@ export default function HomePage() {
               {activeTab === 'rewind' && <RewindPlayer events={data.rewindSequence} />}
               {activeTab === 'graph' && <EntityGraph graph={data.correlations} />}
               {activeTab === 'findings' && <SuspiciousPanel findings={data.suspiciousFindings} />}
-              {activeTab === 'search' && <KeywordSearch results={data?.keywordResults || []} />}
               {activeTab === 'ai' && <AIInvestigator data={data} />}
+              {activeTab === 'ioc' && <IOCDashboard data={data} />}
+              {activeTab === 'hash' && <HashLookup data={data} />}
               {activeTab === 'reports' && <ReportGenerator data={data} />}
             </motion.div>
           </AnimatePresence>

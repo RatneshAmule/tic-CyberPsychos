@@ -652,6 +652,133 @@ export async function analyzeCase(caseId: string): Promise<RealAnalysisResult> {
       } catch (bwErr: any) { console.warn(`[JURI-X]   Binwalk: ${bwErr.message}`); }
     }
 
+    // === YARA MALWARE DETECTION (all files) ===
+    try {
+      console.log(`[JURI-X]   === YARA MALWARE SCAN ===`);
+      const { analyzeWithYARA } = await import('./tool-yara');
+      const yaraResult: any = analyzeWithYARA(filePath);
+      if (yaraResult.available && yaraResult.matchedRules?.length > 0) {
+        for (const rule of yaraResult.matchedRules) {
+          allFindings.push({
+            id: `find-yara-${++findingId}`,
+            severity: rule.tags?.includes('critical') ? 'critical' as SeverityLevel : rule.tags?.includes('high') ? 'highly_suspicious' as SeverityLevel : 'suspicious' as SeverityLevel,
+            category: 'YARA Malware Detection',
+            title: `YARA Rule Match: ${rule.rule}`,
+            description: rule.description || `YARA rule "${rule.rule}" matched at offset ${rule.offset}. Tags: ${(rule.tags || []).join(', ')}`,
+            evidence: fileName,
+            timestamp: new Date().toISOString(),
+            relatedArtifacts: [fileName],
+            confidence: 0.9,
+            recommendation: rule.tags?.includes('ransomware') ? 'ISOLATE immediately. Ransomware indicators detected.' : rule.tags?.includes('backdoor') ? 'Network access may be compromised. Check for C2 communication.' : 'Investigate matched patterns. Submit to VirusTotal for further analysis.',
+          });
+          allNodes.push({ id: `yara-${rule.rule}-${fileName}`, type: 'file', label: `${rule.rule}`, properties: { offset: rule.offset, tags: rule.tags } });
+        }
+        console.log(`[JURI-X]   YARA: ${yaraResult.matchedRules.length} rules matched`);
+      }
+      if (yaraResult.suspiciousFindings?.length) {
+        for (const sf of yaraResult.suspiciousFindings) { allFindings.push({ id: `find-yara2-${++findingId}`, severity: sf.severity as SeverityLevel, category: 'YARA', title: sf.title, description: sf.description, evidence: fileName, timestamp: new Date().toISOString(), relatedArtifacts: [fileName], confidence: sf.confidence || 0.8, recommendation: sf.recommendation || '' }); }
+      }
+      console.log(`[JURI-X]   === YARA SCAN COMPLETE ===`);
+    } catch (yaraErr: any) { console.warn(`[JURI-X]   YARA: ${yaraErr.message}`); }
+
+    // === DEEP TSHARK PCAP ANALYSIS (upgrade for PCAP files) ===
+    if (isPCAP) {
+      try {
+        console.log(`[JURI-X]   === DEEP TSHARK ANALYSIS ===`);
+        const { analyzeWithTShark } = await import('./tool-tshark');
+        const tsharkResult: any = analyzeWithTShark(filePath);
+        if (tsharkResult.available) {
+          if (tsharkResult.tlsSni?.length) {
+            for (const sni of tsharkResult.tlsSni.slice(0, 100)) {
+              allNodes.push({ id: `tls-${sni.hostname}-${fileName}`, type: 'domain', label: sni.hostname, properties: { port: sni.port, ip: sni.ip } });
+              allTimelineEvents.push({ id: `evt-tls-${++eventId}`, timestamp: new Date().toISOString(), action: 'network_connection' as ActionCategory, entity: sni.hostname, description: `TLS SNI: ${sni.hostname} (${sni.port})`, source: `TShark: ${fileName}`, confidence: 0.95, severity: 'benign' as SeverityLevel, relatedEvents: [] });
+            }
+            console.log(`[JURI-X]   TShark Deep: ${tsharkResult.tlsSni.length} TLS SNI entries`);
+          }
+          if (tsharkResult.topTalkers?.length) {
+            for (const talker of tsharkResult.topTalkers.slice(0, 20)) {
+              allNodes.push({ id: `talker-${talker.ip}-${fileName}`, type: 'ip', label: talker.ip, properties: { packets: talker.packets, bytes: talker.bytes } });
+            }
+          }
+          if (tsharkResult.suspiciousFindings?.length) {
+            for (const sf of tsharkResult.suspiciousFindings) { allFindings.push({ id: `find-tshark-${++findingId}`, severity: sf.severity as SeverityLevel, category: 'Deep Network (TShark)', title: sf.title, description: sf.description, evidence: fileName, timestamp: new Date().toISOString(), relatedArtifacts: [fileName], confidence: sf.confidence || 0.85, recommendation: sf.recommendation || '' }); }
+          }
+        }
+        console.log(`[JURI-X]   === DEEP TSHARK COMPLETE ===`);
+      } catch (tsharkErr: any) { console.warn(`[JURI-X]   TShark Deep: ${tsharkErr.message}`); }
+    }
+
+    // === STEGANOGRAPHY DETECTION (images) ===
+    if (isImage) {
+      try {
+        console.log(`[JURI-X]   === STEGANOGRAPHY ANALYSIS ===`);
+        const { analyzeSteganography } = await import('./tool-stego');
+        const stegoResult: any = analyzeSteganography(filePath);
+        if (stegoResult.available) {
+          if (stegoResult.hasSteganography) {
+            allFindings.push({
+              id: `find-stego-${++findingId}`,
+              severity: 'critical' as SeverityLevel,
+              category: 'Steganography',
+              title: `Hidden data detected in ${fileName}`,
+              description: `Steganography analysis detected hidden/embedded data in this image. ${stegoResult.steghideResult?.message || stegoResult.zstegResult?.summary || 'Unknown steganography technique.'}`,
+              evidence: fileName,
+              timestamp: new Date().toISOString(),
+              relatedArtifacts: [fileName],
+              confidence: 0.85,
+              recommendation: 'Extract hidden data using steghide or zsteg. This could contain malware, credentials, or C2 instructions.',
+            });
+          }
+          if (stegoResult.suspiciousFindings?.length) {
+            for (const sf of stegoResult.suspiciousFindings) { allFindings.push({ id: `find-stego2-${++findingId}`, severity: sf.severity as SeverityLevel, category: 'Steganography', title: sf.title, description: sf.description, evidence: fileName, timestamp: new Date().toISOString(), relatedArtifacts: [fileName], confidence: sf.confidence || 0.8, recommendation: sf.recommendation || '' }); }
+          }
+        }
+        console.log(`[JURI-X]   === STEGANOGRAPHY COMPLETE ===`);
+      } catch (stegoErr: any) { console.warn(`[JURI-X]   Steganography: ${stegoErr.message}`); }
+    }
+
+    // === SCALPEL FILE CARVING (disk images & large files) ===
+    if (isDiskImage || (isBinary && fileStat.size > 1024 * 1024)) {
+      try {
+        console.log(`[JURI-X]   === SCALPEL FILE CARVING ===`);
+        const { carveWithScalpel } = await import('./tool-scalpel');
+        const scalpelResult: any = carveWithScalpel(filePath);
+        if (scalpelResult.available && scalpelResult.carvedFiles?.length > 0) {
+          for (const cf of scalpelResult.carvedFiles.slice(0, 50)) {
+            allTimelineEvents.push({ id: `evt-carve-${++eventId}`, timestamp: new Date().toISOString(), action: 'file_created' as ActionCategory, entity: cf.name, description: `Carved: ${cf.name} (${cf.size} bytes) — ${cf.type}`, source: `Scalpel: ${fileName}`, confidence: 0.85, severity: /executable|script|ELF|PE/i.test(cf.type) ? 'suspicious' as SeverityLevel : 'benign' as SeverityLevel, metadata: { type: cf.type, offset: cf.sourceOffset }, relatedEvents: [] });
+            allNodes.push({ id: `carved-${cf.name}-${fileName}`, type: 'file', label: cf.name, properties: { size: cf.size, type: cf.type, offset: cf.sourceOffset } });
+          }
+          console.log(`[JURI-X]   Scalpel: ${scalpelResult.carvedFiles.length} files carved`);
+        }
+        if (scalpelResult.suspiciousFindings?.length) {
+          for (const sf of scalpelResult.suspiciousFindings) { allFindings.push({ id: `find-scalpel-${++findingId}`, severity: sf.severity as SeverityLevel, category: 'File Carving (Scalpel)', title: sf.title, description: sf.description, evidence: fileName, timestamp: new Date().toISOString(), relatedArtifacts: [fileName], confidence: sf.confidence || 0.8, recommendation: sf.recommendation || '' }); }
+        }
+        console.log(`[JURI-X]   === SCALPEL COMPLETE ===`);
+      } catch (scalpelErr: any) { console.warn(`[JURI-X]   Scalpel: ${scalpelErr.message}`); }
+    }
+
+    // === HAYABUSA EVTX ANALYSIS ===
+    const isEVTX = ext === '.evtx' || fileAnalysis.magicType === 'evtx' || fileName.toLowerCase().includes('event') && ext === '.log';
+    if (isEVTX) {
+      try {
+        console.log(`[JURI-X]   === HAYABUSA EVTX ANALYSIS ===`);
+        const { analyzeEVTX } = await import('./tool-evtx');
+        const evtxResult: any = analyzeEVTX(filePath);
+        if (evtxResult.available) {
+          if (evtxResult.criticalEvents?.length) {
+            for (const evt of evtxResult.criticalEvents.slice(0, 100)) {
+              allTimelineEvents.push({ id: `evt-evtx-${++eventId}`, timestamp: evt.timestamp || new Date().toISOString(), action: evt.action || 'system_shutdown' as ActionCategory, entity: evt.description || `EventID ${evt.eventId}`, description: `[EVTX ${evt.eventId}] ${evt.description}`, source: `Hayabusa: ${fileName}`, confidence: 0.9, severity: evt.level === 'critical' ? 'critical' as SeverityLevel : evt.level === 'high' ? 'highly_suspicious' as SeverityLevel : 'suspicious' as SeverityLevel, metadata: { eventId: evt.eventId, data: evt.data }, relatedEvents: [] });
+            }
+          }
+          if (evtxResult.suspiciousFindings?.length) {
+            for (const sf of evtxResult.suspiciousFindings) { allFindings.push({ id: `find-evtx-${++findingId}`, severity: sf.severity as SeverityLevel, category: 'EVTX (Hayabusa)', title: sf.title, description: sf.description, evidence: fileName, timestamp: new Date().toISOString(), relatedArtifacts: [fileName], confidence: sf.confidence || 0.85, recommendation: sf.recommendation || '' }); }
+          }
+          console.log(`[JURI-X]   Hayabusa: ${evtxResult.totalEvents} events, ${evtxResult.criticalEvents?.length || 0} critical`);
+        }
+        console.log(`[JURI-X]   === HAYABUSA EVTX COMPLETE ===`);
+      } catch (evtxErr: any) { console.warn(`[JURI-X]   Hayabusa: ${evtxErr.message}`); }
+    }
+
     // Accumulate keyword results
     for (const kr of keywordResults) {
       allKeywordResults.push({

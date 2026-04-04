@@ -1,0 +1,36 @@
+2026-04-01T08:15:23Z [AUTH] Failed login attempt for user 'admin' from 192.168.1.105
+2026-04-01T08:15:25Z [AUTH] Failed login attempt for user 'root' from 192.168.1.105
+2026-04-01T08:15:28Z [AUTH] Successful login for user 'admin' from 192.168.1.105 password: Passw0rd!
+2026-04-01T08:20:01Z [SYSTEM] Service sshd started by user admin
+2026-04-01T08:22:15Z [NETWORK] Connection from 45.33.32.156 established on port 4444
+2026-04-01T08:22:17Z [NETWORK] Outbound connection to 185.220.101.42:9001 (Tor relay)
+2026-04-01T08:25:33Z [FILE] /tmp/.hidden_backdoor.sh created by user admin
+2026-04-01T08:25:34Z [FILE] /tmp/.hidden_backdoor.sh executed (PID 4521)
+2026-04-01T08:30:00Z [PROCESS] Suspicious process 'nc -l -p 4444' spawned (PID 4533)
+2026-04-01T08:31:12Z [NETWORK] Data exfiltration detected: 2.4MB to 45.33.32.156:4444
+2026-04-01T08:35:00Z [ENCRYPT] File /home/user/documents/secret.xlsx encrypted with AES-256
+2026-04-01T08:36:01Z [FILE] /home/user/documents/secret.xlsx deleted
+2026-04-01T08:40:22Z [REGISTRY] HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Run modified
+2026-04-01T08:40:23Z [REGISTRY] New value 'svchost_update' pointing to C:\Temp\malware.exe
+2026-04-01T08:42:00Z [DRIVER] Unknown driver 'rootkit.sys' loaded from C:\Windows\System32\
+2026-04-01T08:45:10Z [NETWORK] DNS query for phishing-login.com from 192.168.1.105
+2026-04-01T08:45:15Z [NETWORK] DNS query for update-service.onion from 192.168.1.105
+2026-04-01T08:50:00Z [USB] Removable device SanDisk USB mounted at /media/usb0
+2026-04-01T08:51:30Z [FILE] /etc/shadow copied to /media/usb0/backup.txt
+2026-04-01T08:55:00Z [BITCOIN] Transaction: 1BvBMSEYstWetqTFn5Au4m4GFg7xJaNVN2 -> 3FZbgi29cpjq2GjdwV8eyHuJJnkLtktZc5 (0.5 BTC)
+2026-04-01T09:00:00Z [KEYLOG] Keystroke logger detected: /tmp/.klog daemon running as PID 4891
+2026-04-01T09:05:00Z [EXPLOIT] CVE-2024-3400 exploitation attempt from 10.10.10.55
+2026-04-01T09:10:00Z [NETWORK] Connection refused on port 22 from 203.0.113.50 (blocked by firewall)
+2026-04-01T09:15:22Z [SQL] Database dump of credentials table: SELECT * FROM users WHERE role='admin'
+2026-04-01T09:20:00Z [DOWNLOAD] http://malware-server.net/payload.exe downloaded to /tmp/payload.exe
+2026-04-01T09:21:00Z [EXEC] /tmp/payload.exe executed successfully
+2026-04-01T09:25:00Z [UPLOAD] /etc/passwd uploaded to ftp://exfil-server.darknet.com/secrets/
+2026-04-01T09:30:00Z [PROXY] VPN connection established to 198.51.100.23 via OpenVPN
+2026-04-01T09:35:00Z [SHUTDOWN] System shutdown initiated by user admin
+2026-04-01T09:36:00Z [REBOOT] System rebooting...
+2026-04-01T10:00:00Z [NETWORK] Outbound HTTPS to https://darknet-market.onion/product/123
+2026-04-01T10:05:00Z [EMAIL] Email sent to hacker@protonmail.com with subject 'Credentials ready'
+2026-04-01T10:10:00Z [CREDENTIAL] API key found: sk-abc123def456ghi789jkl012mno345pqr678
+2026-04-01T10:15:00Z [MAC] Device with MAC 00:1A:2B:3C:4D:5E connected to network
+2026-04-01T10:20:00Z [HASH] File hash SHA256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855 detected
+2026-04-01T10:25:00Z [CVE] CVE-2025-1234 vulnerability exploited in web application

@@ -1,0 +1,78 @@
+=== CONFIDENTIAL INVESTIGATION NOTES ===
+Case: 2026-FR-0415
+Analyst: Jane Smith
+Date: 2026-04-01
+
+=== SUSPICIOUS IP ADDRESSES ===
+C2 Server: 45.33.32.156
+Tor Exit Node: 185.220.101.42
+Proxy Server: 198.51.100.23
+Internal Compromised: 192.168.1.105
+Attacker Source: 10.10.10.55
+DNS Resolver: 203.0.113.50
+Bitcoin Node: 91.134.23.67
+
+=== SUSPICIOUS DOMAINS ===
+phishing-login.com
+malware-server.net
+darknet-market.onion
+update-service.onion
+silkroad-reborn.onion
+exfil-server.darknet.com
+keylogger-pro.com
+hack-tools.xyz
+exploit-db.ru
+ credential-leak.info
+
+=== SUSPICIOUS URLS ===
+http://malware-server.net/payload.exe
+https://darknet-market.onion/products?id=123
+http://exfil-server.darknet.com/upload?token=abc123
+https://phishing-login.com/login.php?redirect=dashboard
+ftp://admin:password@192.168.1.105/secret_files/
+http://keylogger-pro.com/download?key=XXXXX
+
+=== EMAIL ADDRESSES ===
+Attacker: hacker@protonmail.com
+Drop: secret_drop@yandex.ru
+Victim: admin@company.com
+Operator: ghost_operator@tutanota.com
+
+=== CRYPTO WALLETS ===
+Bitcoin (Suspect): 1BvBMSEYstWetqTFn5Au4m4GFg7xJaNVN2
+Bitcoin (Destination): 3FZbgi29cpjq2GjdwV8eyHuJJnkLtktZc5
+Monero (Laundering): 4AdUndXHHZ6cfufTMvppY6JwXNouMBzSkbLYfpAV5Usx3skQNBYBXW
+Bitcoin (Ransom): bc1qxy2kgdygjrsqtzq2n0yrf2493p83kkfjhx0wlh
+
+=== FILE HASHES (Malware Samples) ===
+SHA256: e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855
+SHA256: 275a021bbfb6489e54d471899f7db9d1663fc695ec2fe2a2c4538aabf651fd0f
+SHA256: adc83b19e793491b1c6ea0fd8b46cd9f32e592fc2fa838c668338736a13206bb
+MD5: d41d8cd98f00b204e9800998ecf8427e
+
+=== CVE REFERENCES ===
+CVE-2024-3400 - Palo Alto Networks OS Command Injection
+CVE-2025-1234 - Custom Application SQL Injection
+CVE-2024-21762 - FortiOS Out-of-Bound Write
+CVE-2023-44487 - HTTP/2 Rapid Reset Attack
+
+=== MAC ADDRESSES ===
+Attacker Laptop: 00:1A:2B:3C:4D:5E
+Compromised Server: AA:BB:CC:DD:EE:FF
+Unknown Device: 77:88:99:AA:BB:CC
+
+=== CREDENTIALS FOUND ===
+API Key: sk-abc123def456ghi789jkl012mno345pqr678
+SSH Key: ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABgQC...
+Password: Sup3rS3cr3t!
+Database: postgres://admin:Passw0rd!@10.0.0.5:5432/production
+Private Key: -----BEGIN RSA PRIVATE KEY-----
+
+=== NOTES ===
+- Subject used Tor browser to access darknet marketplaces
+- Bitcoin transactions traced to mixing service
+- Rootkit found in memory dump (MD5: d41d8cd98f00b204e9800998ecf8427e)
+- Keylogger active from 2026-03-15 to 2026-04-01
+- Credential dump found at /tmp/cred_dump.txt
+- Persistence via registry run key: svchost_update
+- VPN used: 198.51.100.23 (NordVPN exit node)

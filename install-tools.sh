@@ -157,6 +157,52 @@ echo -e "${YELLOW}  → HashDeep...${NC}"
 apt-get install -y hashdeep md5deep 2>/dev/null || echo -e "${RED}  [-] hashdeep failed${NC}"
 
 # === PYTHON FORENSIC LIBRARIES ===
+# === YARA (Malware Detection) ===
+echo -e "${YELLOW}  → YARA (malware pattern matching)...${NC}"
+apt-get install -y yara 2>/dev/null || echo -e "${RED}  [-] yara failed${NC}"
+
+# === CAPA (Malware Capability Detection) ===
+echo -e "${YELLOW}  → CAPA (malware capability detector)...${NC}"
+pip3 install capa 2>/dev/null || echo -e "${YELLOW}  [!] capa pip install failed${NC}"
+
+# === STEGANOGRAPHY ===
+echo -e "${YELLOW}  → Steghide (JPEG/BMP steganography)...${NC}"
+apt-get install -y steghide 2>/dev/null || echo -e "${RED}  [-] steghide failed${NC}"
+
+echo -e "${YELLOW}  → zsteg (PNG steganography)...${NC}"
+pip3 install zsteg 2>/dev/null || echo -e "${YELLOW}  [!] zsteg pip install failed${NC}"
+
+echo -e "${YELLOW}  → stegseek (steganography cracker)...${NC}"
+pip3 install stegseek 2>/dev/null || echo -e "${YELLOW}  [!] stegseek pip install failed${NC}"
+
+# === FILE CARVING ===
+echo -e "${YELLOW}  → Scalpel (advanced file carving)...${NC}"
+apt-get install -y scalpel 2>/dev/null || echo -e "${RED}  [-] scalpel failed${NC}"
+
+# === HAYABUSA (Windows EVTX Analysis) ===
+echo -e "${YELLOW}  → Hayabusa (Windows Event Log analysis)...${NC}"
+if ! command -v hayabusa &> /dev/null; then
+  echo -e "${YELLOW}  → Installing Hayabusa from GitHub...${NC}"
+  if [ -d "/opt/hayabusa" ]; then
+    cd /opt/hayabusa && git pull 2>/dev/null || true
+  else
+    cd /opt && git clone --depth 1 https://github.com/Yamato-Security/hayabusa.git 2>/dev/null || true
+  fi
+  if [ -f "/opt/hayabusa/hayabusa" ]; then
+    chmod +x /opt/hayabusa/hayabusa
+    ln -sf /opt/hayabusa/hayabusa /usr/local/bin/hayabusa 2>/dev/null || true
+  fi
+  # Download Sigma rules for Hayabusa
+  if [ -d "/opt/hayabusa" ] && [ ! -d "/opt/hayabusa/rules" ]; then
+    cd /opt/hayabusa && ./hayabusa --update-rules 2>/dev/null || true
+  fi
+fi
+
+# === ZEEK (Network Security Monitor) ===
+echo -e "${YELLOW}  → Zeek (network security monitoring)...${NC}"
+apt-get install -y zeek 2>/dev/null || echo -e "${RED}  [-] zeek failed${NC}"
+
+# === Python forensic packages ===
 echo -e "${YELLOW}  → Python forensic packages...${NC}"
 pip3 install python-magic pyshark 2>/dev/null || true
 
@@ -193,6 +239,11 @@ TOOLS=(
   "testdisk:TestDisk"
   "unrar:UnRAR"
   "gdisk:GPT fdisk"
+  "yara:YARA (malware detection)"
+  "steghide:Steghide (steganography)"
+  "scalpel:Scalpel (file carving)"
+  "hayabusa:Hayabusa (EVTX analysis)"
+  "zeek|zeekctl:Zeek (network monitor)"
 )
 
 INSTALLED=0
